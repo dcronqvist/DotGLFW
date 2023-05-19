@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -14,33 +13,14 @@ namespace DotGLFW;
 [SuppressUnmanagedCodeSecurity]
 public static class Glfw
 {
-    #region Fields and Constants
-
-    /// <summary>
-    ///     The native library name,
-    ///     <para>For Unix users using an installed version of GLFW, this needs refactored to <c>glfw</c>.</para>
-    /// </summary>
-#if _WINDOWS
-    public const string LIBRARY = "glfw3";
-#elif _OSX
-    public const string LIBRARY = "libglfw.3"; // mac
-#else
-    public const string LIBRARY = "libglfw.3";
-#endif
-
+    internal const string LIBRARY = "glfw3";
     private static readonly ErrorCallback errorCallback = GlfwError;
-
-    #endregion
-
-    #region Constructors
 
     static Glfw()
     {
         Init();
         SetErrorCallback(errorCallback);
     }
-
-    #endregion
 
     /// <summary>
     ///     Returns and clears the error code of the last error that occurred on the calling thread, and optionally

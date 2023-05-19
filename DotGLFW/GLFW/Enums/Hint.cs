@@ -56,8 +56,6 @@ public enum Hint
     /// </summary>
     Floating = 0x00020007,
 
-    HiDPIResize = 0x00020009,
-
     /// <summary>
     ///     Specifies whether the windowed mode window will be maximized when created. This hint is ignored for full screen
     ///     windows.
@@ -216,8 +214,8 @@ public enum Hint
     /// <summary>
     ///     Specifies which client API to create the context for.
     ///     <para>This is a hard constraint.</para>
-    ///     <para>Default Value: <see cref="GLFW.ClientApi.OpenGL" /></para>
-    ///     <para>Possible Values: Any of <see cref="GLFW.ClientApi" /> values.</para>
+    ///     <para>Default Value: <see cref="DotGLFW.ClientApi.OpenGL" /></para>
+    ///     <para>Possible Values: Any of <see cref="DotGLFW.ClientApi" /> values.</para>
     /// </summary>
     ClientApi = 0x00022001,
 
