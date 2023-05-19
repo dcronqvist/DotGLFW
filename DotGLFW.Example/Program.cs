@@ -17,44 +17,25 @@ public class Program
 
     public static void Main(string[] args)
     {
-        // Set some common hints for the OpenGL profile creation
-        Glfw.WindowHint(Hint.ClientApi, ClientApi.OpenGL);
-        Glfw.WindowHint(Hint.ContextVersionMajor, 3);
-        Glfw.WindowHint(Hint.ContextVersionMinor, 3);
-        Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
-        Glfw.WindowHint(Hint.Doublebuffer, true);
-        Glfw.WindowHint(Hint.Decorated, true);
-        Glfw.WindowHint(Hint.OpenglForwardCompatible, true);
-
-        // Create window
-        var window = Glfw.CreateWindow(WIDTH, HEIGHT, TITLE, Monitor.None, Window.None);
-        Glfw.MakeContextCurrent(window);
-
-        // Effectively enables VSYNC by setting to 1.
-        Glfw.SwapInterval(1);
-
-        // Find center position based on window and monitor sizes
-        var screenSize = Glfw.PrimaryMonitor.WorkArea;
-        var x = (screenSize.Width - WIDTH) / 2;
-        var y = (screenSize.Height - HEIGHT) / 2;
-        Glfw.SetWindowPosition(window, x, y);
-
-        glClearColor = Marshal.GetDelegateForFunctionPointer<glClearColorHandler>(Glfw.GetProcAddress("glClearColor"));
-        glClear = Marshal.GetDelegateForFunctionPointer<glClearHandler>(Glfw.GetProcAddress("glClear"));
-
-        double hueShiftScale = 50.0;
-
-        while (!Glfw.WindowShouldClose(window))
+        Glfw.SetErrorCallback((int errorCode, string description) =>
         {
-            // Poll for OS events and swap front/back buffers
-            Glfw.PollEvents();
-            Glfw.SwapBuffers(window);
+            Console.WriteLine($"GLFW Error: 0x{errorCode:X8} - {description}");
+        });
 
-            SetColor(Glfw.Time * hueShiftScale);
+        Glfw.SetMonitorCallback((IntPtr monitor, int @event) =>
+        {
+            Console.WriteLine($"Monitor Event: {monitor} - {@event}");
+        });
 
-            // Clear the buffer to the set color
-            glClear(GL_COLOR_BUFFER_BIT);
-        }
+        int result = Glfw.Init();
+        Console.WriteLine($"GLFW Init: {result}");
+
+        Glfw.GetVersion(out int major, out int minor, out int rev);
+        Console.WriteLine($"GLFW Version: {major}.{minor}.{rev}");
+
+        int monitorCount = 0;
+        Glfw.GetMonitors(out monitorCount);
+        Console.WriteLine($"Monitor Count: {monitorCount}");
     }
 
     private static void SetColor(double time)

@@ -10,7 +10,7 @@ SOURCES +=  DotGLFW/DotGLFW.csproj
 # DOTGLFW VERSION
 DOTGLFW_VERSION := 1.0.0
 
-# VERSION FOR GLFW TO DOWNLOAD
+# VERSION OF GLFW TO DOWNLOAD
 GLFW_VERSION := 3.3.8
 
 # BUILD STUFF
@@ -30,7 +30,7 @@ example-publish: $(NUPKGFILE)
 
 .PHONY: example-run
 example-run: $(NUPKGFILE)
-	dotnet run --project DotGLFW.Example/DotGLFW.Example.csproj -c Release
+	dotnet run --project DotGLFW.Example/DotGLFW.Example.csproj -c Debug
 
 .PHONY: pack
 pack: $(NUPKGFILE)
