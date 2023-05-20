@@ -22,6 +22,7 @@ public class Program
         Glfw.WindowHint(Hint.DoubleBuffer, true);
         Glfw.WindowHint(Hint.Decorated, true);
         Glfw.WindowHint(Hint.OpenGLForwardCompat, true);
+        Glfw.WindowHint(Hint.Resizable, false);
 
         var WIDTH = 800;
         var HEIGHT = 600;
