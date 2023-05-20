@@ -8,6 +8,7 @@
     <RootNamespace>DotGLFW</RootNamespace>
     <LangVersion>10.0</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup>

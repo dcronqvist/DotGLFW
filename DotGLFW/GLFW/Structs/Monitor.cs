@@ -7,6 +7,10 @@ public class Monitor : IEquatable<Monitor>
 {
     internal readonly IntPtr _handle;
 
+    internal Monitor() { }
+    private Monitor(IntPtr handle) => _handle = handle;
+    public static readonly Monitor NULL = new Monitor(IntPtr.Zero);
+
     public IntPtr UserPointer
     {
         get => NativeGlfw.GetMonitorUserPointer(_handle);

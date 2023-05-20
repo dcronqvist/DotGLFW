@@ -41,6 +41,15 @@ public class Program
             Console.WriteLine($"Monitor VideoMode: {videoMode.Width}, {videoMode.Height}, {videoMode.RedBits}, {videoMode.GreenBits}, {videoMode.BlueBits}, {videoMode.RefreshRate}");
         }
 
+        var image = new Image();
+        image.Width = 16;
+        image.Height = 16;
+        image.Pixels = new byte[image.Width * image.Height * 4];
+
+        var window = Glfw.CreateWindow(WIDTH, HEIGHT, TITLE, Monitor.NULL, Window.NULL);
+
+        Glfw.SetWindowIcon(window, new Image[] { image });
+
         Glfw.Terminate();
     }
 
