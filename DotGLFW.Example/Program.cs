@@ -4,66 +4,69 @@ namespace DotGLFW.Example;
 
 public class Program
 {
-    private const string TITLE = "Example Window";
-    private const int WIDTH = 800;
-    private const int HEIGHT = 600;
-
     private const int GL_COLOR_BUFFER_BIT = 0x00004000;
     private delegate void glClearColorHandler(float r, float g, float b, float a);
     private delegate void glClearHandler(int mask);
-
     private static glClearColorHandler glClearColor;
     private static glClearHandler glClear;
 
-    public static void Main(string[] args)
+    static void Main(string[] args)
     {
-        Glfw.SetErrorCallback((ErrorCode errorCode, string description) =>
-        {
-            Console.WriteLine($"GLFW Error: {errorCode.ToString()} - {description}");
-        });
+        Glfw.Init();
 
-        var result = Glfw.Init();
-        Console.WriteLine($"GLFW Init: {result}");
+        // Set some common hints for the OpenGL profile creation
+        Glfw.WindowHint(Hint.ClientAPI, ClientAPI.OpenGLAPI);
+        Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+        Glfw.WindowHint(Hint.ContextVersionMinor, 3);
+        Glfw.WindowHint(Hint.OpenGLProfile, OpenGLProfile.CoreProfile);
+        Glfw.WindowHint(Hint.DoubleBuffer, true);
+        Glfw.WindowHint(Hint.Decorated, true);
+        Glfw.WindowHint(Hint.OpenGLForwardCompat, true);
 
-        Glfw.GetVersion(out int major, out int minor, out int rev);
-        Console.WriteLine($"GLFW Version: {major}.{minor}.{rev}");
+        var WIDTH = 800;
+        var HEIGHT = 600;
+        var TITLE = "DotGLFW Example";
 
-        var monitors = Glfw.GetMonitors();
-        Console.WriteLine($"Monitor Count: {monitors.Length}");
-
-        foreach (var monitor in monitors)
-        {
-            var name = Glfw.GetMonitorName(monitor);
-            Glfw.GetMonitorWorkarea(monitor, out int x, out int y, out int width, out int height);
-            var videoMode = Glfw.GetVideoMode(monitor);
-            Console.WriteLine($"Monitor Name: {name}");
-            Console.WriteLine($"Monitor Workarea: {x}, {y}, {width}, {height}");
-            Console.WriteLine($"Monitor VideoMode: {videoMode.Width}, {videoMode.Height}, {videoMode.RedBits}, {videoMode.GreenBits}, {videoMode.BlueBits}, {videoMode.RefreshRate}");
-        }
-
-        var image = new Image();
-        image.Width = 16;
-        image.Height = 16;
-        image.Pixels = new byte[image.Width * image.Height * 4];
-
+        // Create window
         var window = Glfw.CreateWindow(WIDTH, HEIGHT, TITLE, Monitor.NULL, Window.NULL);
+        Glfw.MakeContextCurrent(window);
 
-        Glfw.SetWindowIcon(window, new Image[] { image });
+        // Enable VSYNC
+        Glfw.SwapInterval(1);
 
-        Glfw.Terminate();
+        var primaryMonitor = Glfw.GetPrimaryMonitor();
+        Glfw.GetMonitorWorkarea(primaryMonitor, out var x, out var y, out var width, out var height);
+        VideoMode primaryVideoMode = Glfw.GetVideoMode(primaryMonitor);
+
+        int refreshRate = primaryVideoMode.RefreshRate;
+        double delta = 1.0 / refreshRate;
+
+        // Find center position based on window and monitor sizes
+        Glfw.SetWindowPos(window, width / 2 - WIDTH / 2, height / 2 - HEIGHT / 2);
+
+        glClearColor = Marshal.GetDelegateForFunctionPointer<glClearColorHandler>(Glfw.GetProcAddress("glClearColor"));
+        glClear = Marshal.GetDelegateForFunctionPointer<glClearHandler>(Glfw.GetProcAddress("glClear"));
+
+        while (!Glfw.WindowShouldClose(window))
+        {
+            Glfw.PollEvents();
+            Glfw.SwapBuffers(window);
+
+            double currentTime = Glfw.GetTime();
+            SetHueShiftedColor(currentTime * delta * 200);
+
+            // Clear the buffer to the set color
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
     }
 
-    private static void SetColor(double time)
+    private static void SetHueShiftedColor(double time)
     {
-        // Set the clear color based on the current time
-        // Hue shifting over time
-
-        var hue = (time % 360) / 360.0f;
-
-        var r = (float)Math.Sin(hue * 2 * Math.PI);
-        var g = (float)Math.Sin((hue + 1.0 / 3.0) * 2 * Math.PI);
-        var b = (float)Math.Sin((hue + 2.0 / 3.0) * 2 * Math.PI);
-
-        glClearColor(r, g, b, 1.0f);
+        // Set the clear color to a shifted hue
+        float r = (float)(Math.Sin(time) / 2 + 0.5);
+        float g = (float)(Math.Sin(time + 2) / 2 + 0.5);
+        float b = (float)(Math.Sin(time + 4) / 2 + 0.5);
+        float a = 1.0f;
+        glClearColor(r, g, b, a);
     }
 }

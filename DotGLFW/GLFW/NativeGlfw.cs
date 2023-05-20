@@ -5,70 +5,6 @@ using System.Security;
 
 namespace DotGLFW;
 
-#region GLFW Delegate Types
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwErrorCallback(ErrorCode errorCode, string description);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwMonitorCallback(Monitor monitor, int @event);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowPosCallback(IntPtr window, int x, int y);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowSizeCallback(IntPtr window, int width, int height);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowCloseCallback(IntPtr window);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowRefreshCallback(IntPtr window);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowFocusCallback(IntPtr window, int focused);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowIconifyCallback(IntPtr window, int iconified);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowMaximizeCallback(IntPtr window, int maximized);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwFramebufferSizeCallback(IntPtr window, int width, int height);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwWindowContentScaleCallback(IntPtr window, float xscale, float yscale);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwKeyCallback(IntPtr window, int key, int scancode, int action, int mods);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwCharCallback(IntPtr window, uint codepoint);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwCharModsCallback(IntPtr window, uint codepoint, int mods);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwMouseButtonCallback(IntPtr window, int button, int action, int mods);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwCursorPosCallback(IntPtr window, double xpos, double ypos);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwCursorEnterCallback(IntPtr window, int entered);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwScrollCallback(IntPtr window, double xoffset, double yoffset);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwDropCallback(IntPtr window, int count, IntPtr paths);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void GlfwJoystickCallback(int jid, int @event);
-
-#endregion
-
 /// <summary>
 /// The native GLFW library, a 1:1 mapping of the native library in C.
 /// </summary>
@@ -76,6 +12,70 @@ public delegate void GlfwJoystickCallback(int jid, int @event);
 public static class NativeGlfw
 {
     internal const string LIBRARY = "glfw3";
+
+    #region GLFW Delegate Types
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwErrorCallback(int errorCode, IntPtr description);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwMonitorCallback(IntPtr monitor, int @event);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowPosCallback(IntPtr window, int x, int y);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowSizeCallback(IntPtr window, int width, int height);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowCloseCallback(IntPtr window);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowRefreshCallback(IntPtr window);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowFocusCallback(IntPtr window, int focused);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowIconifyCallback(IntPtr window, int iconified);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowMaximizeCallback(IntPtr window, int maximized);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwFramebufferSizeCallback(IntPtr window, int width, int height);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwWindowContentScaleCallback(IntPtr window, float xscale, float yscale);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwKeyCallback(IntPtr window, int key, int scancode, int action, int mods);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwCharCallback(IntPtr window, uint codepoint);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwCharModsCallback(IntPtr window, uint codepoint, int mods);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwMouseButtonCallback(IntPtr window, int button, int action, int mods);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwCursorPosCallback(IntPtr window, double xpos, double ypos);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwCursorEnterCallback(IntPtr window, int entered);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwScrollCallback(IntPtr window, double xoffset, double yoffset);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwDropCallback(IntPtr window, int count, IntPtr paths);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void NativeGlfwJoystickCallback(int jid, int @event);
+
+    #endregion
 
     #region GLFW Constants
 
@@ -406,8 +406,7 @@ public static class NativeGlfw
     public static extern int GetError(out IntPtr description);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetErrorCallback", CallingConvention = CallingConvention.Cdecl)]
-    [return: MarshalAs(UnmanagedType.FunctionPtr, MarshalTypeRef = typeof(GlfwErrorCallback))]
-    public static extern GlfwErrorCallback SetErrorCallback(GlfwErrorCallback callback);
+    public static extern NativeGlfwErrorCallback SetErrorCallback(NativeGlfwErrorCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwGetMonitors", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr GetMonitors(out int count);
@@ -437,8 +436,8 @@ public static class NativeGlfw
     public static extern IntPtr GetMonitorUserPointer(IntPtr monitor);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetMonitorCallback", CallingConvention = CallingConvention.Cdecl)]
-    [return: MarshalAs(UnmanagedType.FunctionPtr, MarshalTypeRef = typeof(GlfwMonitorCallback))]
-    public static extern GlfwMonitorCallback SetMonitorCallback(GlfwMonitorCallback callback);
+    [return: MarshalAs(UnmanagedType.FunctionPtr, MarshalTypeRef = typeof(NativeGlfwMonitorCallback))]
+    public static extern NativeGlfwMonitorCallback SetMonitorCallback(NativeGlfwMonitorCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwGetVideoModes", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr GetVideoModes(IntPtr monitor, out int count);
@@ -555,31 +554,31 @@ public static class NativeGlfw
     public static extern IntPtr GetWindowUserPointer(IntPtr window);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowPosCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowPosCallback SetWindowPosCallback(IntPtr window, GlfwWindowPosCallback callback);
+    public static extern NativeGlfwWindowPosCallback SetWindowPosCallback(IntPtr window, NativeGlfwWindowPosCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowSizeCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowSizeCallback SetWindowSizeCallback(IntPtr window, GlfwWindowSizeCallback callback);
+    public static extern NativeGlfwWindowSizeCallback SetWindowSizeCallback(IntPtr window, NativeGlfwWindowSizeCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowCloseCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowCloseCallback SetWindowCloseCallback(IntPtr window, GlfwWindowCloseCallback callback);
+    public static extern NativeGlfwWindowCloseCallback SetWindowCloseCallback(IntPtr window, NativeGlfwWindowCloseCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowRefreshCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowRefreshCallback SetWindowRefreshCallback(IntPtr window, GlfwWindowRefreshCallback callback);
+    public static extern NativeGlfwWindowRefreshCallback SetWindowRefreshCallback(IntPtr window, NativeGlfwWindowRefreshCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowFocusCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowFocusCallback SetWindowFocusCallback(IntPtr window, GlfwWindowFocusCallback callback);
+    public static extern NativeGlfwWindowFocusCallback SetWindowFocusCallback(IntPtr window, NativeGlfwWindowFocusCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowIconifyCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowIconifyCallback SetWindowIconifyCallback(IntPtr window, GlfwWindowIconifyCallback callback);
+    public static extern NativeGlfwWindowIconifyCallback SetWindowIconifyCallback(IntPtr window, NativeGlfwWindowIconifyCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowMaximizeCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowMaximizeCallback SetWindowMaximizeCallback(IntPtr window, GlfwWindowMaximizeCallback callback);
+    public static extern NativeGlfwWindowMaximizeCallback SetWindowMaximizeCallback(IntPtr window, NativeGlfwWindowMaximizeCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetFramebufferSizeCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwFramebufferSizeCallback SetFramebufferSizeCallback(IntPtr window, GlfwFramebufferSizeCallback callback);
+    public static extern NativeGlfwFramebufferSizeCallback SetFramebufferSizeCallback(IntPtr window, NativeGlfwFramebufferSizeCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowContentScaleCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwWindowContentScaleCallback SetWindowContentScaleCallback(IntPtr window, GlfwWindowContentScaleCallback callback);
+    public static extern NativeGlfwWindowContentScaleCallback SetWindowContentScaleCallback(IntPtr window, NativeGlfwWindowContentScaleCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwPollEvents", CallingConvention = CallingConvention.Cdecl)]
     public static extern void PollEvents();
@@ -633,28 +632,28 @@ public static class NativeGlfw
     public static extern void SetCursor(IntPtr window, IntPtr cursor);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetKeyCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwKeyCallback SetKeyCallback(IntPtr window, GlfwKeyCallback callback);
+    public static extern NativeGlfwKeyCallback SetKeyCallback(IntPtr window, NativeGlfwKeyCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetCharCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwCharCallback SetCharCallback(IntPtr window, GlfwCharCallback callback);
+    public static extern NativeGlfwCharCallback SetCharCallback(IntPtr window, NativeGlfwCharCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetCharModsCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwCharModsCallback SetCharModsCallback(IntPtr window, GlfwCharModsCallback callback);
+    public static extern NativeGlfwCharModsCallback SetCharModsCallback(IntPtr window, NativeGlfwCharModsCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetMouseButtonCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwMouseButtonCallback SetMouseButtonCallback(IntPtr window, GlfwMouseButtonCallback callback);
+    public static extern NativeGlfwMouseButtonCallback SetMouseButtonCallback(IntPtr window, NativeGlfwMouseButtonCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetCursorPosCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwCursorPosCallback SetCursorPosCallback(IntPtr window, GlfwCursorPosCallback callback);
+    public static extern NativeGlfwCursorPosCallback SetCursorPosCallback(IntPtr window, NativeGlfwCursorPosCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetCursorEnterCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwCursorEnterCallback SetCursorEnterCallback(IntPtr window, GlfwCursorEnterCallback callback);
+    public static extern NativeGlfwCursorEnterCallback SetCursorEnterCallback(IntPtr window, NativeGlfwCursorEnterCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetScrollCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwScrollCallback SetScrollCallback(IntPtr window, GlfwScrollCallback callback);
+    public static extern NativeGlfwScrollCallback SetScrollCallback(IntPtr window, NativeGlfwScrollCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetDropCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwDropCallback SetDropCallback(IntPtr window, GlfwDropCallback callback);
+    public static extern NativeGlfwDropCallback SetDropCallback(IntPtr window, NativeGlfwDropCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwJoystickPresent", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JoystickPresent(int jid);
@@ -684,7 +683,7 @@ public static class NativeGlfw
     public static extern int JoystickIsGamepad(int jid);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetJoystickCallback", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GlfwJoystickCallback SetJoystickCallback(GlfwJoystickCallback callback);
+    public static extern NativeGlfwJoystickCallback SetJoystickCallback(NativeGlfwJoystickCallback callback);
 
     [DllImport(LIBRARY, EntryPoint = "glfwUpdateGamepadMappings", CallingConvention = CallingConvention.Cdecl)]
     public static extern int UpdateGamepadMappings(string mapping);
@@ -696,7 +695,7 @@ public static class NativeGlfw
     public static extern int GetGamepadState(int jid, out IntPtr state);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetClipboardString", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SetClipboardString(IntPtr window, string @string);
+    public static extern void SetClipboardString(IntPtr window, IntPtr @string);
 
     [DllImport(LIBRARY, EntryPoint = "glfwGetClipboardString", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr GetClipboardString(IntPtr window);

@@ -3,13 +3,13 @@ using System.Runtime.InteropServices;
 namespace DotGLFW;
 
 [StructLayout(LayoutKind.Sequential)]
-public class Monitor : IEquatable<Monitor>
+public class Cursor : IEquatable<Monitor>
 {
     internal readonly IntPtr _handle;
 
-    internal Monitor() { }
-    internal Monitor(IntPtr handle) => _handle = handle;
-    public static readonly Monitor NULL = new Monitor(IntPtr.Zero);
+    internal Cursor() { }
+    internal Cursor(IntPtr handle) => _handle = handle;
+    public static readonly Cursor NULL = new Cursor(IntPtr.Zero);
 
     public bool Equals(Monitor other)
     {
