@@ -17,25 +17,31 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Glfw.SetErrorCallback((int errorCode, string description) =>
+        Glfw.SetErrorCallback((ErrorCode errorCode, string description) =>
         {
-            Console.WriteLine($"GLFW Error: 0x{errorCode:X8} - {description}");
+            Console.WriteLine($"GLFW Error: {errorCode.ToString()} - {description}");
         });
 
-        Glfw.SetMonitorCallback((IntPtr monitor, int @event) =>
-        {
-            Console.WriteLine($"Monitor Event: {monitor} - {@event}");
-        });
-
-        int result = Glfw.Init();
+        var result = Glfw.Init();
         Console.WriteLine($"GLFW Init: {result}");
 
         Glfw.GetVersion(out int major, out int minor, out int rev);
         Console.WriteLine($"GLFW Version: {major}.{minor}.{rev}");
 
-        int monitorCount = 0;
-        Glfw.GetMonitors(out monitorCount);
-        Console.WriteLine($"Monitor Count: {monitorCount}");
+        var monitors = Glfw.GetMonitors();
+        Console.WriteLine($"Monitor Count: {monitors.Length}");
+
+        foreach (var monitor in monitors)
+        {
+            var name = Glfw.GetMonitorName(monitor);
+            Glfw.GetMonitorWorkarea(monitor, out int x, out int y, out int width, out int height);
+            var videoMode = Glfw.GetVideoMode(monitor);
+            Console.WriteLine($"Monitor Name: {name}");
+            Console.WriteLine($"Monitor Workarea: {x}, {y}, {width}, {height}");
+            Console.WriteLine($"Monitor VideoMode: {videoMode.Width}, {videoMode.Height}, {videoMode.RedBits}, {videoMode.GreenBits}, {videoMode.BlueBits}, {videoMode.RefreshRate}");
+        }
+
+        Glfw.Terminate();
     }
 
     private static void SetColor(double time)
