@@ -23,10 +23,10 @@ NUPKGFILE := nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg
 
 .PHONY: example-publish
 example-publish: $(NUPKGFILE)
-	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/win-x64 -r win-x64
-	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/win-x86 -r win-x86
-	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/osx-x64 -r osx-x64
-	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/osx-arm64 -r osx-arm64
+	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/win-x64 -r win-x64 /p:DebugType=None /p:DebugSymbols=false
+	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/win-x86 -r win-x86 /p:DebugType=None /p:DebugSymbols=false
+	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/osx-x64 -r osx-x64 /p:DebugType=None /p:DebugSymbols=false
+	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/osx-arm64 -r osx-arm64 /p:DebugType=None /p:DebugSymbols=false
 
 .PHONY: example-run
 example-run: $(NUPKGFILE)
