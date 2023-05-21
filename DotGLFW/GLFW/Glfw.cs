@@ -327,7 +327,7 @@ public static class Glfw
     /// <summary>
     /// This function generates an appropriately sized gamma ramp from the specified exponent and then calls <see cref="Glfw.SetGammaRamp" /> with it. The value must be a finite number greater than zero. <br/>
     /// The software controlled gamma ramp is applied in addition to the hardware gamma correction, which today is usually an approximation of sRGB gamma. This means that setting a perfectly linear ramp, or gamma 1.0, will produce the default (usually sRGB-like) behavior. <br/>
-    /// For gamma correct rendering with OpenGL or OpenGL ES, see the GLFW_SRGB_CAPABLE hint. TODO: Fix this ref
+    /// For gamma correct rendering with OpenGL or OpenGL ES, see the <see cref="Hint.SRGBCapable" /> hint.
     /// </summary>
     /// <remarks>
     /// This function must only be called from the main thread. <br/>
@@ -356,7 +356,7 @@ public static class Glfw
     /// <summary>
     /// This function sets the current gamma ramp for the specified monitor. The original gamma ramp for that monitor is saved by GLFW the first time this function is called and is restored by <see cref="Glfw.Terminate" />. <br/>
     /// The software controlled gamma ramp is applied in addition to the hardware gamma correction, which today is usually an approximation of sRGB gamma. This means that setting a perfectly linear ramp, or gamma 1.0, will produce the default (usually sRGB-like) behavior. <br/>
-    /// For gamma correct rendering with OpenGL or OpenGL ES, see the GLFW_SRGB_CAPABLE hint. TODO: Fix this ref
+    /// For gamma correct rendering with OpenGL or OpenGL ES, see the <see cref="Hint.SRGBCapable" /> hint.
     /// </summary>
     /// <remarks>
     /// This function must only be called from the main thread. <br/>
@@ -568,7 +568,7 @@ public static class Glfw
     /// This function sets the size, in screen coordinates, of the content area of the specified window. <br/>
     /// For full screen windows, this function updates the resolution of its desired video mode and switches to the video mode closest to it, without affecting the window's context. <br/>
     /// As the context is unaffected, the bit depths of the framebuffer remain unchanged. <br/>
-    /// If you wish to update the refresh rate of the desired video mode in addition to its resolution, see <see cref="SetWindowMonitor(Window, Monitor, int, int, int, int)"/>. <br/>
+    /// If you wish to update the refresh rate of the desired video mode in addition to its resolution, see <see cref="Glfw.SetWindowMonitor(Window, Monitor, int, int, int, int, int)"/>. <br/>
     /// The window manager may put limits on what sizes are allowed. GLFW cannot and should not override these limits. <br/>
     /// </summary>
     /// <param name="window">The window to resize.</param>
