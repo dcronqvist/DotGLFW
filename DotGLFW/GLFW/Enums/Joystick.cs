@@ -1,5 +1,10 @@
 namespace DotGLFW;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+/// <summary>
+/// An enumerator for all joysticks
+/// </summary>
 public enum Joystick
 {
     Joystick1 = 0,
@@ -19,3 +24,5 @@ public enum Joystick
     Joystick15 = 14,
     Joystick16 = 15
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

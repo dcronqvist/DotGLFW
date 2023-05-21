@@ -1,5 +1,10 @@
 namespace DotGLFW;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+/// <summary>
+/// An enumerator for standard cursor shapes
+/// </summary>
 public enum GamepadButton
 {
     A = NativeGlfw.GLFW_GAMEPAD_BUTTON_A,
@@ -33,3 +38,5 @@ public enum GamepadAxis
     LeftTrigger = NativeGlfw.GLFW_GAMEPAD_AXIS_LEFT_TRIGGER,
     RightTrigger = NativeGlfw.GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER,
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
