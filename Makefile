@@ -21,15 +21,20 @@ RUNTIMEFOLDER_OSXX64 := DotGLFW/runtimes/osx-x64/native
 RUNTIMEFOLDER_OSXARM64 := DotGLFW/runtimes/osx-arm64/native
 NUPKGFILE := nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg
 
-.PHONY: example-publish
-example-publish: $(NUPKGFILE)
+.PHONY: publish
+publish:
+	@echo "Publishing DotGLFW $(DOTGLFW_VERSION) to NuGet"
+
+
+.PHONY: build
+build: $(NUPKGFILE)
 	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/win-x64 -r win-x64 /p:DebugType=None /p:DebugSymbols=false
 	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/win-x86 -r win-x86 /p:DebugType=None /p:DebugSymbols=false
 	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/osx-x64 -r osx-x64 /p:DebugType=None /p:DebugSymbols=false
 	dotnet publish DotGLFW.Example/DotGLFW.Example.csproj -c Release --self-contained true -o ./publish/osx-arm64 -r osx-arm64 /p:DebugType=None /p:DebugSymbols=false
 
-.PHONY: example-run
-example-run: $(NUPKGFILE)
+.PHONY: run
+run: $(NUPKGFILE)
 	dotnet run --project DotGLFW.Example/DotGLFW.Example.csproj -c Debug
 
 .PHONY: pack
@@ -46,38 +51,42 @@ $(RUNTIMEFOLDER_WINX64)/glfw3.dll:
 	@echo "Downloading GLFW $(GLFW_VERSION) for Windows x64"
 	@New-Item -ItemType Directory -Force -Path "$(RUNTIMEFOLDER_WINX64)" | Out-Null
 	@if(Test-Path "$(RUNTIMEFOLDER_WINX64)/glfw3.dll") { Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_WINX64)/glfw3.dll" }
-	Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.WIN64.zip" -OutFile "$(RANDOM_FILE)"
+	@Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.WIN64.zip" -OutFile "$(RANDOM_FILE)"
 	@Expand-Archive -Path "$(RANDOM_FILE)" -DestinationPath "$(RUNTIMEFOLDER_WINX64)"
-	Copy-Item -Path "$(RUNTIMEFOLDER_WINX64)/glfw-$(GLFW_VERSION).bin.WIN64/lib-vc2022/glfw3.dll" -Destination "$(RUNTIMEFOLDER_WINX64)/glfw3.dll"
+	@Copy-Item -Path "$(RUNTIMEFOLDER_WINX64)/glfw-$(GLFW_VERSION).bin.WIN64/lib-vc2022/glfw3.dll" -Destination "$(RUNTIMEFOLDER_WINX64)/glfw3.dll"
 	@Remove-Item -Recurse -Force -Path "$(RANDOM_FILE)"
 	@Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_WINX64)/glfw-$(GLFW_VERSION).bin.WIN64"
+	@echo "Done downling GLFW $(GLFW_VERSION) for Windows x64!"
 
 $(RUNTIMEFOLDER_WINX86)/glfw3.dll:
 	@echo "Downloading GLFW $(GLFW_VERSION) for Windows x86"
 	@New-Item -ItemType Directory -Force -Path "$(RUNTIMEFOLDER_WINX86)" | Out-Null
 	@if(Test-Path "$(RUNTIMEFOLDER_WINX86)/glfw3.dll") { Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_WINX86)/glfw3.dll" }
-	Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.WIN32.zip" -OutFile "$(RANDOM_FILE)"
+	@Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.WIN32.zip" -OutFile "$(RANDOM_FILE)"
 	@Expand-Archive -Path "$(RANDOM_FILE)" -DestinationPath "$(RUNTIMEFOLDER_WINX86)"
-	Copy-Item -Path "$(RUNTIMEFOLDER_WINX86)/glfw-$(GLFW_VERSION).bin.WIN32/lib-vc2022/glfw3.dll" -Destination "$(RUNTIMEFOLDER_WINX86)/glfw3.dll"
+	@Copy-Item -Path "$(RUNTIMEFOLDER_WINX86)/glfw-$(GLFW_VERSION).bin.WIN32/lib-vc2022/glfw3.dll" -Destination "$(RUNTIMEFOLDER_WINX86)/glfw3.dll"
 	@Remove-Item -Recurse -Force -Path "$(RANDOM_FILE)"
 	@Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_WINX86)/glfw-$(GLFW_VERSION).bin.WIN32"
+	@echo "Done downling GLFW $(GLFW_VERSION) for Windows x86!"
 
 $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib:
 	@echo "Downloading GLFW $(GLFW_VERSION) for macOS x64"
 	@New-Item -ItemType Directory -Force -Path "$(RUNTIMEFOLDER_OSXX64)" | Out-Null
 	@if(Test-Path "$(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib") { Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib" }
-	Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.MACOS.zip" -OutFile "$(RANDOM_FILE)"
+	@Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.MACOS.zip" -OutFile "$(RANDOM_FILE)"
 	@Expand-Archive -Path "$(RANDOM_FILE)" -DestinationPath "$(RUNTIMEFOLDER_OSXX64)"
-	Copy-Item -Path "$(RUNTIMEFOLDER_OSXX64)/glfw-$(GLFW_VERSION).bin.MACOS/lib-universal/libglfw.3.dylib" -Destination "$(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib"
+	@Copy-Item -Path "$(RUNTIMEFOLDER_OSXX64)/glfw-$(GLFW_VERSION).bin.MACOS/lib-universal/libglfw.3.dylib" -Destination "$(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib"
 	@Remove-Item -Recurse -Force -Path "$(RANDOM_FILE)"
 	@Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_OSXX64)/glfw-$(GLFW_VERSION).bin.MACOS"
+	@echo "Done downling GLFW $(GLFW_VERSION) for macOS x64!"
 
 $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib:
 	@echo "Downloading GLFW $(GLFW_VERSION) for macOS ARM64"
 	@New-Item -ItemType Directory -Force -Path "$(RUNTIMEFOLDER_OSXARM64)" | Out-Null
 	@if(Test-Path "$(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib") { Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib" }
-	Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.MACOS.zip" -OutFile "$(RANDOM_FILE)"
+	@Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).bin.MACOS.zip" -OutFile "$(RANDOM_FILE)"
 	@Expand-Archive -Path "$(RANDOM_FILE)" -DestinationPath "$(RUNTIMEFOLDER_OSXARM64)"
-	Copy-Item -Path "$(RUNTIMEFOLDER_OSXARM64)/glfw-$(GLFW_VERSION).bin.MACOS/lib-arm64/libglfw.3.dylib" -Destination "$(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib"
+	@Copy-Item -Path "$(RUNTIMEFOLDER_OSXARM64)/glfw-$(GLFW_VERSION).bin.MACOS/lib-arm64/libglfw.3.dylib" -Destination "$(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib"
 	@Remove-Item -Recurse -Force -Path "$(RANDOM_FILE)"
 	@Remove-Item -Recurse -Force -Path "$(RUNTIMEFOLDER_OSXARM64)/glfw-$(GLFW_VERSION).bin.MACOS"
+	@echo "Done downling GLFW $(GLFW_VERSION) for macOS ARM64!"

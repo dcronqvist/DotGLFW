@@ -14,14 +14,15 @@
     <PackageId>DotGLFW</PackageId>
     <Authors>dcronqvist</Authors>
     <Title>DotGLFW</Title>
-    <PackageIcon>icon-64.png</PackageIcon>
     <Description>DotGLFW is a C# wrapper for GLFW, a multi-platform library with included GLFW binaries for creating windows with OpenGL contexts and managing input and events.</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/dcronqvist/DotGLFW</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>glfw;opengl;gamedev;window;input;binding</PackageTags>
+    <PackageTags>glfw;opengl;gamedev;window;input;binding;wrapper</PackageTags>
     <PackageProjectUrl>https://www.glfw.org/</PackageProjectUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright © 2023 dcronqvist</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +36,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="../README.md" Pack="true" PackagePath="" />
-    <None Include="../icon-64.png" Pack="true" PackagePath="" />
+    <None Include="../LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

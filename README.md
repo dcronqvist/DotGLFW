@@ -1,4 +1,4 @@
-# ☕ DotGLFW 🚧 WIP 🚧
+# ☕ DotGLFW
 
 ❗ A fully managed .NET wrapper for GLFW with provided binaries to allow for seamless integration in your projects!
 
