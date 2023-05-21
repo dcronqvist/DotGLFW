@@ -1,6 +1,6 @@
 ![icon](icon-64.png)
 
-# DotGLFW 🚧 WIP 🚧
+# ☕ DotGLFW 🚧 WIP 🚧
 
 ❗ A fully managed .NET wrapper for GLFW with provided binaries to allow for seamless integration in your projects!
 
