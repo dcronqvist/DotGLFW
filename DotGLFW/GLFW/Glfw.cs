@@ -1817,7 +1817,7 @@ public static class Glfw
     /// This function returns the address of the specified function for the current OpenGL or OpenGL ES context. Before calling this function, you must have made the context of the specified window current.
     /// </summary>
     /// <param name="procname">The ASCII encoded name of the function</param>
-    public static unsafe IntPtr GetProcAddress(string procname)
+    public static IntPtr GetProcAddress(string procname)
     {
         return NativeGlfw.GetProcAddress(procname);
     }
@@ -1859,7 +1859,7 @@ public static class Glfw
     /// <param name="vkInstance">The Vulkan instance to query, or <see cref="IntPtr.Zero" /> for the global uninstanced function</param>
     /// <param name="procname">The ASCII encoded name of the function</param>
     /// <returns>The address of the function, or <see cref="IntPtr.Zero" /> if an error occurred</returns>
-    public static unsafe IntPtr GetInstanceProcAddress(IntPtr vkInstance, string procname)
+    public static IntPtr GetInstanceProcAddress(IntPtr vkInstance, string procname)
     {
         return NativeGlfw.GetInstanceProcAddress(vkInstance, procname);
     }
