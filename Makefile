@@ -38,7 +38,7 @@ pack: $(NUPKGFILE)
 # PACK
 $(NUPKGFILE): $(SOURCES) $(RUNTIMEFOLDER_WINX64)/glfw3.dll $(RUNTIMEFOLDER_WINX86)/glfw3.dll $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib
 	@echo "Packing DotGLFW $(DOTGLFW_VERSION)"
-	dotnet pack -c Release DotGLFW -o ./nupkg -p:PackageVersion=$(DOTGLFW_VERSION)
+	dotnet pack -c Release DotGLFW -o ./nupkg -p:PackageVersion=$(DOTGLFW_VERSION) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 	@dotnet nuget locals all --clear
 	@dotnet restore DotGLFW.sln
 
