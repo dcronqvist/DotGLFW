@@ -48,6 +48,13 @@ public class Program
         glClearColor = Marshal.GetDelegateForFunctionPointer<glClearColorHandler>(Glfw.GetProcAddress("glClearColor"));
         glClear = Marshal.GetDelegateForFunctionPointer<glClearHandler>(Glfw.GetProcAddress("glClear"));
 
+        Glfw.SetKeyCallback(window, (window, key, scancode, action, mods) =>
+        {
+            Console.WriteLine($"Key: {key}, Scancode: {scancode}, Action: {action}, Mods: {mods}");
+        });
+
+        GC.Collect();
+
         while (!Glfw.WindowShouldClose(window))
         {
             Glfw.PollEvents();

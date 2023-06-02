@@ -15,63 +15,83 @@ public static class NativeGlfw
 
     #region GLFW Delegate Types
 
+    internal static NativeGlfwErrorCallback _currentNativeGlfwErrorCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwErrorCallback(int errorCode, IntPtr description);
 
+    internal static NativeGlfwMonitorCallback _currentNativeGlfwMonitorCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwMonitorCallback(IntPtr monitor, int @event);
 
+    internal static NativeGlfwWindowPosCallback _currentNativeGlfwWindowPosCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowPosCallback(IntPtr window, int x, int y);
 
+    internal static NativeGlfwWindowSizeCallback _currentNativeGlfwWindowSizeCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowSizeCallback(IntPtr window, int width, int height);
 
+    internal static NativeGlfwWindowCloseCallback _currentNativeGlfwWindowCloseCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowCloseCallback(IntPtr window);
 
+    internal static NativeGlfwWindowRefreshCallback _currentNativeGlfwWindowRefreshCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowRefreshCallback(IntPtr window);
 
+    internal static NativeGlfwWindowFocusCallback _currentNativeGlfwWindowFocusCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowFocusCallback(IntPtr window, int focused);
 
+    internal static NativeGlfwWindowIconifyCallback _currentNativeGlfwWindowIconifyCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowIconifyCallback(IntPtr window, int iconified);
 
+    internal static NativeGlfwWindowMaximizeCallback _currentNativeGlfwWindowMaximizeCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowMaximizeCallback(IntPtr window, int maximized);
 
+    internal static NativeGlfwFramebufferSizeCallback _currentNativeGlfwFramebufferSizeCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwFramebufferSizeCallback(IntPtr window, int width, int height);
 
+    internal static NativeGlfwWindowContentScaleCallback _currentNativeGlfwWindowContentScaleCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwWindowContentScaleCallback(IntPtr window, float xscale, float yscale);
 
+    internal static NativeGlfwKeyCallback _currentNativeGlfwKeyCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwKeyCallback(IntPtr window, int key, int scancode, int action, int mods);
 
+    internal static NativeGlfwCharCallback _currentNativeGlfwCharCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwCharCallback(IntPtr window, uint codepoint);
 
+    internal static NativeGlfwCharModsCallback _currentNativeGlfwCharModsCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwCharModsCallback(IntPtr window, uint codepoint, int mods);
 
+    internal static NativeGlfwMouseButtonCallback _currentNativeGlfwMouseButtonCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwMouseButtonCallback(IntPtr window, int button, int action, int mods);
 
+    internal static NativeGlfwCursorPosCallback _currentNativeGlfwCursorPosCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwCursorPosCallback(IntPtr window, double xpos, double ypos);
 
+    internal static NativeGlfwCursorEnterCallback _currentNativeGlfwCursorEnterCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwCursorEnterCallback(IntPtr window, int entered);
 
+    internal static NativeGlfwScrollCallback _currentNativeGlfwScrollCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwScrollCallback(IntPtr window, double xoffset, double yoffset);
 
+    internal static NativeGlfwDropCallback _currentNativeGlfwDropCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwDropCallback(IntPtr window, int count, IntPtr paths);
 
+    internal static NativeGlfwJoystickCallback _currentNativeGlfwJoystickCallback;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void NativeGlfwJoystickCallback(int jid, int @event);
 

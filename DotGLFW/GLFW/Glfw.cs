@@ -114,10 +114,12 @@ public static class Glfw
             return oldCallback;
         }
 
-        NativeGlfw.SetErrorCallback((int errorCode, IntPtr description) =>
+        NativeGlfw._currentNativeGlfwErrorCallback = (int errorCode, IntPtr description) =>
         {
             _errorCallback?.Invoke((ErrorCode)errorCode, Marshal.PtrToStringUTF8(description));
-        });
+        };
+
+        NativeGlfw.SetErrorCallback(NativeGlfw._currentNativeGlfwErrorCallback);
 
         return oldCallback;
     }
@@ -279,11 +281,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetMonitorCallback((IntPtr monitor, int @event) =>
+        NativeGlfw._currentNativeGlfwMonitorCallback = (IntPtr monitor, int @event) =>
         {
             Monitor m = Marshal.PtrToStructure<Monitor>(monitor);
             callback(m, (ConnectionState)@event);
-        });
+        };
+
+        NativeGlfw.SetMonitorCallback(NativeGlfw._currentNativeGlfwMonitorCallback);
 
         return old;
     }
@@ -819,11 +823,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowPosCallback(window._handle, (IntPtr ptr, int x, int y) =>
+        NativeGlfw._currentNativeGlfwWindowPosCallback = (IntPtr ptr, int x, int y) =>
         {
             Window w = new Window(ptr);
             _windowPosCallback(w, x, y);
-        });
+        };
+
+        NativeGlfw.SetWindowPosCallback(window._handle, NativeGlfw._currentNativeGlfwWindowPosCallback);
 
         return old;
     }
@@ -848,11 +854,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowSizeCallback(window._handle, (IntPtr ptr, int width, int height) =>
+        NativeGlfw._currentNativeGlfwWindowSizeCallback = (IntPtr ptr, int width, int height) =>
         {
             Window w = new Window(ptr);
             _windowSizeCallback(w, width, height);
-        });
+        };
+
+        NativeGlfw.SetWindowSizeCallback(window._handle, NativeGlfw._currentNativeGlfwWindowSizeCallback);
 
         return old;
     }
@@ -877,11 +885,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowCloseCallback(window._handle, (IntPtr ptr) =>
+        NativeGlfw._currentNativeGlfwWindowCloseCallback = (IntPtr ptr) =>
         {
             Window w = new Window(ptr);
             _windowCloseCallback(w);
-        });
+        };
+
+        NativeGlfw.SetWindowCloseCallback(window._handle, NativeGlfw._currentNativeGlfwWindowCloseCallback);
 
         return old;
     }
@@ -906,11 +916,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowRefreshCallback(window._handle, (IntPtr ptr) =>
+        NativeGlfw._currentNativeGlfwWindowRefreshCallback = (IntPtr ptr) =>
         {
             Window w = new Window(ptr);
             _windowRefreshCallback(w);
-        });
+        };
+
+        NativeGlfw.SetWindowRefreshCallback(window._handle, NativeGlfw._currentNativeGlfwWindowRefreshCallback);
 
         return old;
     }
@@ -935,11 +947,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowFocusCallback(window._handle, (IntPtr ptr, int focused) =>
+        NativeGlfw._currentNativeGlfwWindowFocusCallback = (IntPtr ptr, int focused) =>
         {
             Window w = new Window(ptr);
             _windowFocusCallback(w, focused != 0);
-        });
+        };
+
+        NativeGlfw.SetWindowFocusCallback(window._handle, NativeGlfw._currentNativeGlfwWindowFocusCallback);
 
         return old;
     }
@@ -964,11 +978,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowIconifyCallback(window._handle, (IntPtr ptr, int iconified) =>
+        NativeGlfw._currentNativeGlfwWindowIconifyCallback = (IntPtr ptr, int iconified) =>
         {
             Window w = new Window(ptr);
             _windowIconifyCallback(w, iconified != 0);
-        });
+        };
+
+        NativeGlfw.SetWindowIconifyCallback(window._handle, NativeGlfw._currentNativeGlfwWindowIconifyCallback);
 
         return old;
     }
@@ -993,11 +1009,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowMaximizeCallback(window._handle, (IntPtr ptr, int maximized) =>
+        NativeGlfw._currentNativeGlfwWindowMaximizeCallback = (IntPtr ptr, int maximized) =>
         {
             Window w = new Window(ptr);
             _windowMaximizeCallback(w, maximized != 0);
-        });
+        };
+
+        NativeGlfw.SetWindowMaximizeCallback(window._handle, NativeGlfw._currentNativeGlfwWindowMaximizeCallback);
 
         return old;
     }
@@ -1022,11 +1040,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetFramebufferSizeCallback(window._handle, (IntPtr ptr, int width, int height) =>
+        NativeGlfw._currentNativeGlfwFramebufferSizeCallback = (IntPtr ptr, int width, int height) =>
         {
             Window w = new Window(ptr);
             _framebufferSizeCallback(w, width, height);
-        });
+        };
+
+        NativeGlfw.SetFramebufferSizeCallback(window._handle, NativeGlfw._currentNativeGlfwFramebufferSizeCallback);
 
         return old;
     }
@@ -1051,11 +1071,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetWindowContentScaleCallback(window._handle, (IntPtr ptr, float xScale, float yScale) =>
+        NativeGlfw._currentNativeGlfwWindowContentScaleCallback = (IntPtr ptr, float xScale, float yScale) =>
         {
             Window w = new Window(ptr);
             _windowContentScaleCallback(w, xScale, yScale);
-        });
+        };
+
+        NativeGlfw.SetWindowContentScaleCallback(window._handle, NativeGlfw._currentNativeGlfwWindowContentScaleCallback);
 
         return old;
     }
@@ -1289,11 +1311,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetKeyCallback(window._handle, (IntPtr ptr, int key, int scancode, int action, int modifiers) =>
+        NativeGlfw._currentNativeGlfwKeyCallback = (IntPtr ptr, int key, int scancode, int action, int modifiers) =>
         {
             Window w = new Window(ptr);
             callback(w, (Keys)key, scancode, (InputState)action, (ModifierKeys)modifiers);
-        });
+        };
+
+        NativeGlfw.SetKeyCallback(window._handle, NativeGlfw._currentNativeGlfwKeyCallback);
 
         return old;
     }
@@ -1318,11 +1342,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetCharCallback(window._handle, (IntPtr ptr, uint codepoint) =>
+        NativeGlfw._currentNativeGlfwCharCallback = (IntPtr ptr, uint codepoint) =>
         {
             Window w = new Window(ptr);
             callback(w, codepoint);
-        });
+        };
+
+        NativeGlfw.SetCharCallback(window._handle, NativeGlfw._currentNativeGlfwCharCallback);
 
         return old;
     }
@@ -1347,11 +1373,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetCharModsCallback(window._handle, (IntPtr ptr, uint codepoint, int mods) =>
+        NativeGlfw._currentNativeGlfwCharModsCallback = (IntPtr ptr, uint codepoint, int mods) =>
         {
             Window w = new Window(ptr);
             callback(w, codepoint, (ModifierKeys)mods);
-        });
+        };
+
+        NativeGlfw.SetCharModsCallback(window._handle, NativeGlfw._currentNativeGlfwCharModsCallback);
 
         return old;
     }
@@ -1376,11 +1404,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetMouseButtonCallback(window._handle, (IntPtr ptr, int button, int action, int mods) =>
+        NativeGlfw._currentNativeGlfwMouseButtonCallback = (IntPtr ptr, int button, int action, int mods) =>
         {
             Window w = new Window(ptr);
             callback(w, (MouseButton)button, (InputState)action, (ModifierKeys)mods);
-        });
+        };
+
+        NativeGlfw.SetMouseButtonCallback(window._handle, NativeGlfw._currentNativeGlfwMouseButtonCallback);
 
         return old;
     }
@@ -1405,11 +1435,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetCursorPosCallback(window._handle, (IntPtr ptr, double x, double y) =>
+        NativeGlfw._currentNativeGlfwCursorPosCallback = (IntPtr ptr, double x, double y) =>
         {
             Window w = new Window(ptr);
             callback(w, x, y);
-        });
+        };
+
+        NativeGlfw.SetCursorPosCallback(window._handle, NativeGlfw._currentNativeGlfwCursorPosCallback);
 
         return old;
     }
@@ -1434,11 +1466,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetCursorEnterCallback(window._handle, (IntPtr ptr, int entered) =>
+        NativeGlfw._currentNativeGlfwCursorEnterCallback = (IntPtr ptr, int entered) =>
         {
             Window w = new Window(ptr);
             callback(w, entered != 0);
-        });
+        };
+
+        NativeGlfw.SetCursorEnterCallback(window._handle, NativeGlfw._currentNativeGlfwCursorEnterCallback);
 
         return old;
     }
@@ -1463,11 +1497,13 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetScrollCallback(window._handle, (IntPtr ptr, double x, double y) =>
+        NativeGlfw._currentNativeGlfwScrollCallback = (IntPtr ptr, double x, double y) =>
         {
             Window w = new Window(ptr);
             callback(w, x, y);
-        });
+        };
+
+        NativeGlfw.SetScrollCallback(window._handle, NativeGlfw._currentNativeGlfwScrollCallback);
 
         return old;
     }
@@ -1492,7 +1528,7 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetDropCallback(window._handle, (IntPtr ptr, int count, IntPtr names) =>
+        NativeGlfw._currentNativeGlfwDropCallback = (IntPtr ptr, int count, IntPtr names) =>
         {
             Window w = new Window(ptr);
 
@@ -1504,7 +1540,9 @@ public static class Glfw
             }
 
             callback(w, fileNames);
-        });
+        };
+
+        NativeGlfw.SetDropCallback(window._handle, NativeGlfw._currentNativeGlfwDropCallback);
 
         return old;
     }
@@ -1660,10 +1698,12 @@ public static class Glfw
             return old;
         }
 
-        NativeGlfw.SetJoystickCallback((int jid, int @event) =>
+        NativeGlfw._currentNativeGlfwJoystickCallback = (int jid, int @event) =>
         {
             callback((Joystick)jid, (ConnectionState)@event);
-        });
+        };
+
+        NativeGlfw.SetJoystickCallback(NativeGlfw._currentNativeGlfwJoystickCallback);
 
         return old;
     }

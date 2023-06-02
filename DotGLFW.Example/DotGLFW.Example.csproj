@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotGLFW" Version="1.0.0" />
+    <PackageReference Include="DotGLFW" Version="1.0.1" />
   </ItemGroup>
 
 </Project>
