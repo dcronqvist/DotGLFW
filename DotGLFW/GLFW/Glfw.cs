@@ -1122,7 +1122,7 @@ public static class Glfw
     /// <returns>The current value of the specified input mode</returns>
     public static T GetInputMode<T>(Window window, InputModeType<T> mode) where T : Enum
     {
-        int modeAsInt = Convert.ToInt32(mode);
+        int modeAsInt = mode.Mode;
         int currentMode = NativeGlfw.GetInputMode(window._handle, modeAsInt);
         return (T)Enum.ToObject(typeof(T), currentMode);
     }
@@ -1135,7 +1135,7 @@ public static class Glfw
     /// <returns>The current value of the specified input mode</returns>
     public static bool GetInputMode(Window window, InputModeType<bool> mode)
     {
-        int modeAsInt = Convert.ToInt32(mode);
+        int modeAsInt = mode.Mode;
         return NativeGlfw.GetInputMode(window._handle, modeAsInt) != 0;
     }
 
@@ -1147,7 +1147,7 @@ public static class Glfw
     /// <param name="value">The new value of the specified input mode</param>
     public static void SetInputMode(Window window, InputModeType<bool> mode, bool value)
     {
-        int modeAsInt = Convert.ToInt32(mode);
+        int modeAsInt = mode.Mode;
         NativeGlfw.SetInputMode(window._handle, modeAsInt, value ? 1 : 0);
     }
 
@@ -1159,7 +1159,7 @@ public static class Glfw
     /// <param name="value">The new value of the specified input mode</param>
     public static void SetInputMode<T>(Window window, InputModeType<T> mode, T value) where T : Enum
     {
-        int modeAsInt = Convert.ToInt32(mode);
+        int modeAsInt = mode.Mode;
         int valueAsInt = Convert.ToInt32(value);
         NativeGlfw.SetInputMode(window._handle, modeAsInt, valueAsInt);
     }

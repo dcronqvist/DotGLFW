@@ -41,6 +41,12 @@ public class Window
     }
 
     /// <summary>
+    /// Returns the underlying pointer.
+    /// </summary>
+    /// <returns></returns>
+    public IntPtr GetHandle() => _handle;
+
+    /// <summary>
     /// Performs equality check against another window handle.
     /// </summary>
     public static bool operator ==(Window left, Window right) => left.Equals(right);

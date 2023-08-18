@@ -41,6 +41,12 @@ public class Cursor
     }
 
     /// <summary>
+    /// Returns the underlying pointer.
+    /// </summary>
+    /// <returns></returns>
+    public IntPtr GetHandle() => _handle;
+
+    /// <summary>
     /// Performs equality check against another cursor handle.
     /// </summary>
     public static bool operator ==(Cursor left, Cursor right) => left.Equals(right);

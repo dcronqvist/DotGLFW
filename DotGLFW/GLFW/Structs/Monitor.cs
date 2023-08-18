@@ -41,6 +41,12 @@ public class Monitor
     }
 
     /// <summary>
+    /// Returns the underlying pointer.
+    /// </summary>
+    /// <returns></returns>
+    public IntPtr GetHandle() => _handle;
+
+    /// <summary>
     /// Performs equality check against another monitor handle.
     /// </summary>
     public static bool operator ==(Monitor left, Monitor right) => left.Equals(right);
