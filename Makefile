@@ -8,7 +8,7 @@ SOURCES := $(wildcard DotGLFW/GLFW/*.cs)
 SOURCES +=  DotGLFW/DotGLFW.csproj
 
 # DOTGLFW VERSION
-DOTGLFW_VERSION := 1.0.2
+DOTGLFW_VERSION := 1.0.3
 
 # VERSION OF GLFW TO DOWNLOAD
 GLFW_VERSION := 3.3.8
@@ -20,6 +20,8 @@ RUNTIMEFOLDER_WINX86 := DotGLFW/runtimes/win-x86/native
 RUNTIMEFOLDER_OSXX64 := DotGLFW/runtimes/osx-x64/native
 RUNTIMEFOLDER_OSXARM64 := DotGLFW/runtimes/osx-arm64/native
 NUPKGFILE := nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg
+PLAYGROUND_DLL := DotGLFW.Playground/bin/Debug/net8.0/DotGLFW.Playground.dll
+EXAMPLE_DLL := DotGLFW.Example/bin/Debug/net7.0/DotGLFW.Example.dll
 
 .PHONY: publish
 publish:
@@ -36,6 +38,18 @@ build: $(NUPKGFILE)
 .PHONY: run
 run: $(NUPKGFILE)
 	dotnet run --project DotGLFW.Example/DotGLFW.Example.csproj -c Debug
+
+.PHONY: debug
+debug: $(NUPKGFILE)
+	dotnet build DotGLFW.Playground/DotGLFW.Playground.csproj -c Debug
+	@echo "$(shell pwsh .scripts/gen_debug_args.ps1 $(PLAYGROUND_DLL) . '[]')"
+	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(PLAYGROUND_DLL) . '[]')"
+
+.PHONY: debug-example
+debug-example: $(NUPKGFILE)
+	dotnet build DotGLFW.Example/DotGLFW.Example.csproj -c Debug
+	@echo "$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
+	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
 
 .PHONY: pack
 pack: $(NUPKGFILE)

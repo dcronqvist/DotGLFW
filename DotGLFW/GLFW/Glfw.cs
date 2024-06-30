@@ -1736,17 +1736,11 @@ public static class Glfw
     /// <returns><c>true</c> if successful, or <c>false</c> if the joystick is not present</returns>
     public static bool GetGamepadState(Joystick joystick, out GamepadState state)
     {
-        int result = NativeGlfw.GetGamepadState((int)joystick, out IntPtr nativeState);
-
-        if (result == 0)
-        {
-            state = default;
-            return false;
-        }
-
-        state = Marshal.PtrToStructure<GamepadState>(nativeState);
-
-        return true;
+        IntPtr gamepadState = Marshal.AllocHGlobal(Marshal.SizeOf<GamepadState>());
+        int result = NativeGlfw.GetGamepadState((int)joystick, gamepadState);
+        state = Marshal.PtrToStructure<GamepadState>(gamepadState);
+        Marshal.FreeHGlobal(gamepadState);
+        return result != 0;
     }
 
     /// <summary>

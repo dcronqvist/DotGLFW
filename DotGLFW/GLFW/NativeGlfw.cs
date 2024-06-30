@@ -712,7 +712,7 @@ public static class NativeGlfw
     public static extern IntPtr GetGamepadName(int jid);
 
     [DllImport(LIBRARY, EntryPoint = "glfwGetGamepadState", CallingConvention = CallingConvention.Cdecl)]
-    public static extern int GetGamepadState(int jid, out IntPtr state);
+    public static extern int GetGamepadState(int jid, IntPtr state);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetClipboardString", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SetClipboardString(IntPtr window, IntPtr @string);

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using DotGLFW;
 
 namespace DotGLFW.Example;
 
@@ -39,11 +40,18 @@ public class Program
 
         Glfw.MakeContextCurrent(window);
 
-        glClearColor = Marshal.GetDelegateForFunctionPointer<glClearColorHandler>(Glfw.GetProcAddress("glClearColor"));
-        glClear = Marshal.GetDelegateForFunctionPointer<glClearHandler>(Glfw.GetProcAddress("glClear"));
+        var videoModes = Glfw.GetVideoModes(Glfw.GetPrimaryMonitor());
 
         // This line crashes the program
-        Glfw.GetGamepadState(Joystick.Joystick1, out GamepadState state);
+        bool result = Glfw.JoystickPresent(Joystick.Joystick1);
+        bool joystickIsGamePad = Glfw.JoystickIsGamepad(Joystick.Joystick1);
+        string joystickName = Glfw.GetJoystickName(Joystick.Joystick1);
+        float[] axes = Glfw.GetJoystickAxes(Joystick.Joystick1);
+
+        IntPtr gamepadStatePtr = Marshal.AllocHGlobal(Marshal.SizeOf<GamepadState>());
+        int getGamepadStateResult = NativeGlfw.GetGamepadState((int)Joystick.Joystick1, gamepadStatePtr);
+        GamepadState gamepadState = Marshal.PtrToStructure<GamepadState>(gamepadStatePtr);
+        Marshal.FreeHGlobal(gamepadStatePtr);
 
         while (!Glfw.WindowShouldClose(window))
         {
