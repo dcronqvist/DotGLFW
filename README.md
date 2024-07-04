@@ -1,4 +1,4 @@
-# ☕ DotGLFW [![Nuget](https://img.shields.io/nuget/v/DotGLFW)](https://www.nuget.org/packages/DotGLFW/1.0.3)
+# ☕ DotGLFW [![Nuget](https://img.shields.io/nuget/v/DotGLFW)](https://www.nuget.org/packages/DotGLFW)
 
 ❗ A fully managed .NET wrapper for GLFW with provided binaries to allow for seamless integration in your projects!
 
