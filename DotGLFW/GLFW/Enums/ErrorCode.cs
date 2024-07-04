@@ -99,4 +99,39 @@ public enum ErrorCode
     /// Application programmer error. Fix the offending call.
     /// </remarks>
     NoWindowContext = NativeGlfw.GLFW_NO_WINDOW_CONTEXT,
+
+    /// <summary>
+    /// The specified standard cursor shape is not available, either because the current platform cursor theme does not provide it or because it is not available on the platform.
+    /// </summary>
+    /// <remarks>
+    /// Platform or system settings limitation. Pick another standard cursor shape or create a custom cursor.
+    /// </remarks>
+    CursorUnavailable = NativeGlfw.GLFW_CURSOR_UNAVAILABLE,
+
+    /// <summary>
+    /// The requested feature is not provided by the platform, so GLFW is unable to implement it. The documentation for each function notes if it could emit this error.
+    /// </summary>
+    /// <remarks>
+    /// Platform or platform version limitation. The error can be ignored unless the feature is critical to the application.
+    /// A function call that emits this error has no effect other than the error and updating any existing out parameters.
+    /// </remarks>
+    FeatureUnavailable = NativeGlfw.GLFW_FEATURE_UNAVAILABLE,
+
+    /// <summary>
+    /// The requested feature has not yet been implemented in GLFW for this platform.
+    /// </summary>
+    /// <remarks>
+    /// An incomplete implementation of GLFW for this platform, hopefully fixed in a future release. The error can be ignored unless the feature is critical to the application.
+    /// A function call that emits this error has no effect other than the error and updating any existing out parameters.
+    /// </remarks>
+    FeatureUnimplemented = NativeGlfw.GLFW_FEATURE_UNIMPLEMENTED,
+
+    /// <summary>
+    /// If emitted during initialization, no matching platform was found. If the GLFW_PLATFORM init hint was set to GLFW_ANY_PLATFORM, GLFW could not detect any of the platforms supported by this library binary, except for the Null platform. If the init hint was set to a specific platform, it is either not supported by this library binary or GLFW was not able to detect it.
+    /// If emitted by a native access function, GLFW was initialized for a different platform than the function is for.
+    /// </summary>
+    /// <remarks>
+    /// Failure to detect any platform usually only happens on non-macOS Unix systems, either when no window system is running or the program was run from a terminal that does not have the necessary environment variables. Fall back to a different platform if possible or notify the user that no usable platform was detected.
+    /// </remarks>
+    PlatformUnavailable = NativeGlfw.GLFW_PLATFORM_UNAVAILABLE
 }

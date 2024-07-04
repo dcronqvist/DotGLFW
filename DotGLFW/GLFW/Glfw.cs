@@ -14,6 +14,11 @@ public static class Glfw
     public static readonly int DontCare = NativeGlfw.GLFW_DONT_CARE;
 
     /// <summary>
+    /// Used in certain functions to indicate that the function should take any valid value for that argument. <br/>
+    /// </summary>
+    public static readonly int AnyPosition = NativeGlfw.GLFW_ANY_POSITION;
+
+    /// <summary>
     /// This function initializes the GLFW library. Before most GLFW functions can be used, GLFW must be initialized, and before an application terminates GLFW should be terminated in order to free any resources allocated during or after initialization. <br/>
     /// If this function fails, it calls <see cref="Glfw.Terminate" /> before returning. If it succeeds, you should call <see cref="Glfw.Terminate" /> before the application exits. <br/>
     /// Additional calls to this function after successful initialization but before termination will return <c>true</c> immediately. <br/>
@@ -45,7 +50,11 @@ public static class Glfw
     /// This function must only be called from the main thread.
     /// This function may be called before <see cref="Glfw.Init" />.
     /// </remarks>
-    public static void InitHint(InitHint hint, bool value) => NativeGlfw.InitHint((int)hint, value ? 1 : 0);
+    public static void InitHint<T>(HintType<T> hint, T value) where T : struct
+    {
+        int newValue = Convert.ToInt32(value);
+        NativeGlfw.InitHint(hint.Hint, newValue);
+    }
 
     /// <summary>
     /// This function retrieves the major, minor and revision numbers of the GLFW library. It is intended for when you are using GLFW as a shared library and want to ensure that you are using the minimum required version. <br/>
@@ -123,6 +132,16 @@ public static class Glfw
 
         return oldCallback;
     }
+
+    /// <summary>
+    /// This function returns the platform.
+    /// </summary>
+    public static Platform GetPlatform() => (Platform)NativeGlfw.GetPlatform();
+
+    /// <summary>
+    /// This function returns whether the specified platform is supported.
+    /// </summary>
+    public static bool PlatformSupported(Platform platform) => NativeGlfw.PlatformSupported((int)platform) != 0;
 
     /// <summary>
     /// This function returns an array of <see cref="Monitor" /> for all currently connected monitors. The primary monitor is always first in the returned array. If no monitors were found, this function returns an empty array.
@@ -466,6 +485,16 @@ public static class Glfw
     public static void SetWindowShouldClose(Window window, bool value)
     {
         NativeGlfw.SetWindowShouldClose(window._handle, value ? 1 : 0);
+    }
+
+    /// <summary>
+    /// This function gets the value of the window title of the specified window.
+    /// </summary>
+    /// <param name="window">The window whose title to get.</param>
+    public static string GetWindowTitle(Window window)
+    {
+        IntPtr ptr = NativeGlfw.GetWindowTitle(window._handle);
+        return Marshal.PtrToStringUTF8(ptr);
     }
 
     /// <summary>
