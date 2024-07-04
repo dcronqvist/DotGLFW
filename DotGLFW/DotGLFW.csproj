@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AssemblyName>DotGLFW</AssemblyName>
@@ -21,7 +21,7 @@
     <PackageTags>glfw;opengl;gamedev;window;input;binding;wrapper</PackageTags>
     <PackageProjectUrl>https://www.glfw.org/</PackageProjectUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Copyright>Copyright © 2023 dcronqvist</Copyright>
+    <Copyright>Copyright © 2024 dcronqvist</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 

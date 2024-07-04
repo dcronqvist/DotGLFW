@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW", "DotGLFW\DotGLFW.csproj", "{88837A20-EC98-4EFE-B75B-020FEC26152C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW.Example", "DotGLFW.Example\DotGLFW.Example.csproj", "{87CF7093-59BB-4D64-9ADD-AA6FE5F94665}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW.NugetExample", "DotGLFW.NugetExample\DotGLFW.NugetExample.csproj", "{87CF7093-59BB-4D64-9ADD-AA6FE5F94665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW.Playground", "DotGLFW.Playground\DotGLFW.Playground.csproj", "{E81745CC-4E4A-44B8-981F-22C77268E229}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW.LocalExample", "DotGLFW.LocalExample\DotGLFW.LocalExample.csproj", "{22965227-34F4-4E86-A6F8-8460896C57D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +26,9 @@ Global
 		{87CF7093-59BB-4D64-9ADD-AA6FE5F94665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87CF7093-59BB-4D64-9ADD-AA6FE5F94665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87CF7093-59BB-4D64-9ADD-AA6FE5F94665}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E81745CC-4E4A-44B8-981F-22C77268E229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E81745CC-4E4A-44B8-981F-22C77268E229}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E81745CC-4E4A-44B8-981F-22C77268E229}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E81745CC-4E4A-44B8-981F-22C77268E229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22965227-34F4-4E86-A6F8-8460896C57D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22965227-34F4-4E86-A6F8-8460896C57D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22965227-34F4-4E86-A6F8-8460896C57D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22965227-34F4-4E86-A6F8-8460896C57D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

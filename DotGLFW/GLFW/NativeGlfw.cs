@@ -312,6 +312,10 @@ public static class NativeGlfw
     public const int GLFW_PLATFORM_ERROR = 0x00010008;
     public const int GLFW_FORMAT_UNAVAILABLE = 0x00010009;
     public const int GLFW_NO_WINDOW_CONTEXT = 0x0001000A;
+    public const int GLFW_CURSOR_UNAVAILABLE = 0x0001000B;
+    public const int GLFW_FEATURE_UNAVAILABLE = 0x0001000C;
+    public const int GLFW_FEATURE_UNIMPLEMENTED = 0x0001000D;
+    public const int GLFW_PLATFORM_UNAVAILABLE = 0x0001000E;
 
     public const int GLFW_FOCUSED = 0x00020001;
     public const int GLFW_ICONIFIED = 0x00020002;
@@ -325,6 +329,9 @@ public static class NativeGlfw
     public const int GLFW_TRANSPARENT_FRAMEBUFFER = 0x0002000A;
     public const int GLFW_HOVERED = 0x0002000B;
     public const int GLFW_FOCUS_ON_SHOW = 0x0002000C;
+    public const int GLFW_MOUSE_PASSTHROUGH = 0x0002000D;
+    public const int GLFW_POSITION_X = 0x0002000E;
+    public const int GLFW_POSITION_Y = 0x0002000F;
 
     public const int GLFW_RED_BITS = 0x00021001;
     public const int GLFW_GREEN_BITS = 0x00021002;
@@ -355,6 +362,7 @@ public static class NativeGlfw
     public const int GLFW_CONTEXT_NO_ERROR = 0x0002200A;
     public const int GLFW_CONTEXT_CREATION_API = 0x0002200B;
     public const int GLFW_SCALE_TO_MONITOR = 0x0002200C;
+    public const int GLFW_SCALE_FRAMEBUFFER = 0x0002200D;
 
     public const int GLFW_COCOA_RETINA_FRAMEBUFFER = 0x00023001;
     public const int GLFW_COCOA_FRAME_NAME = 0x00023002;
@@ -362,6 +370,11 @@ public static class NativeGlfw
 
     public const int GLFW_X11_CLASS_NAME = 0x00024001;
     public const int GLFW_X11_INSTANCE_NAME = 0x00024002;
+
+    public const int GLFW_WIN32_KEYBOARD_MENU = 0x00025001;
+    public const int GLFW_WIN32_SHOWDEFAULT = 0x00025002;
+
+    public const int GLFW_WAYLAND_APP_ID = 0x00026001;
 
     public const int GLFW_NO_API = 0;
     public const int GLFW_OPENGL_API = 0x00030001;
@@ -380,12 +393,25 @@ public static class NativeGlfw
     public const int GLFW_CURSOR_NORMAL = 0x00034001;
     public const int GLFW_CURSOR_HIDDEN = 0x00034002;
     public const int GLFW_CURSOR_DISABLED = 0x00034003;
+    public const int GLFW_CURSOR_CAPTURED = 0x00034004;
+
     public const int GLFW_ANY_RELEASE_BEHAVIOR = 0;
     public const int GLFW_RELEASE_BEHAVIOR_FLUSH = 0x00035001;
     public const int GLFW_RELEASE_BEHAVIOR_NONE = 0x00035002;
     public const int GLFW_NATIVE_CONTEXT_API = 0x00036001;
     public const int GLFW_EGL_CONTEXT_API = 0x00036002;
     public const int GLFW_OSMESA_CONTEXT_API = 0x00036003;
+
+    public const int GLFW_ANGLE_PLATFORM_TYPE_NONE = 0x00037001;
+    public const int GLFW_ANGLE_PLATFORM_TYPE_OPENGL = 0x00037002;
+    public const int GLFW_ANGLE_PLATFORM_TYPE_OPENGLES = 0x00037003;
+    public const int GLFW_ANGLE_PLATFORM_TYPE_D3D9 = 0x00037004;
+    public const int GLFW_ANGLE_PLATFORM_TYPE_D3D11 = 0x00037005;
+    public const int GLFW_ANGLE_PLATFORM_TYPE_VULKAN = 0x00037007;
+    public const int GLFW_ANGLE_PLATFORM_TYPE_METAL = 0x00037008;
+
+    public const int GLFW_ANY_POSITION = unchecked((int)0x80000000);
+
     public const int GLFW_ARROW_CURSOR = 0x00036001;
     public const int GLFW_IBEAM_CURSOR = 0x00036002;
     public const int GLFW_CROSSHAIR_CURSOR = 0x00036003;
@@ -395,10 +421,21 @@ public static class NativeGlfw
     public const int GLFW_CONNECTED = 0x00040001;
     public const int GLFW_DISCONNECTED = 0x00040002;
     public const int GLFW_JOYSTICK_HAT_BUTTONS = 0x00050001;
+    public const int GLFW_ANGLE_PLATFORM_TYPE = 0x00050002;
+    public const int GLFW_PLATFORM = 0x00050003;
     public const int GLFW_COCOA_CHDIR_RESOURCES = 0x00051001;
     public const int GLFW_COCOA_MENUBAR = 0x00051002;
-    public const int GLFW_DONT_CARE = -1;
+    public const int GLFW_X11_XCB_VULKAN_SURFACE = 0x00052001;
+    public const int GLFW_WAYLAND_LIBDECOR = 0x00053001;
 
+    public const int GLFW_ANY_PLATFORM = 0x00060000;
+    public const int GLFW_PLATFORM_WIN32 = 0x00060001;
+    public const int GLFW_PLATFORM_COCOA = 0x00060002;
+    public const int GLFW_PLATFORM_WAYLAND = 0x00060003;
+    public const int GLFW_PLATFORM_X11 = 0x00060004;
+    public const int GLFW_PLATFORM_NULL = 0x00060005;
+
+    public const int GLFW_DONT_CARE = -1;
     public const int GLFW_RELEASE = 0;
     public const int GLFW_PRESS = 1;
     public const int GLFW_REPEAT = 2;
@@ -427,6 +464,12 @@ public static class NativeGlfw
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetErrorCallback", CallingConvention = CallingConvention.Cdecl)]
     public static extern NativeGlfwErrorCallback SetErrorCallback(NativeGlfwErrorCallback callback);
+
+    [DllImport(LIBRARY, EntryPoint = "glfwGetPlatform", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int GetPlatform();
+
+    [DllImport(LIBRARY, EntryPoint = "glfwPlatformSupported", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int PlatformSupported(int platform);
 
     [DllImport(LIBRARY, EntryPoint = "glfwGetMonitors", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr GetMonitors(out int count);
@@ -494,6 +537,9 @@ public static class NativeGlfw
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowShouldClose", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SetWindowShouldClose(IntPtr window, int value);
+
+    [DllImport(LIBRARY, EntryPoint = "glfwGetWindowTitle", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr GetWindowTitle(IntPtr window);
 
     [DllImport(LIBRARY, EntryPoint = "glfwSetWindowTitle", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SetWindowTitle(IntPtr window, string title);

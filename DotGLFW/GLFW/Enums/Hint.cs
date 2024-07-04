@@ -209,6 +209,41 @@ public static class Hint
     /// Specifies the desired ASCII encoded instance part of the ICCCM class hint for the window. This is only supported on X11.
     /// </summary>
     public static readonly HintType<string> X11InstanceName = new HintType<string>(NativeGlfw.GLFW_X11_INSTANCE_NAME);
+
+    /// <summary>
+    /// Specifies the access to the window menu. Possible values are <c>true</c> and <c>false</c>.
+    /// </summary>
+    public static readonly HintType<bool> Win32KeyboardMenu = new HintType<bool>(NativeGlfw.GLFW_WIN32_KEYBOARD_MENU);
+
+    /// <summary>
+    /// Specifies whether the parent process show command should be applied to the child process. Windows specific.
+    /// </summary>
+    public static readonly HintType<bool> Win32ShowDefault = new HintType<bool>(NativeGlfw.GLFW_WIN32_SHOWDEFAULT);
+
+    /// <summary>
+    /// Allows specification of the Wayland app_id.
+    /// </summary>
+    public static readonly HintType<string> WaylandAppId = new HintType<string>(NativeGlfw.GLFW_WAYLAND_APP_ID);
+
+    /// <summary>
+    /// The window frame will not be rendered at full resolution on Retina displays unless this hint is set to <c>true</c>.
+    /// </summary>
+    public static readonly HintType<bool> ScaleFramebuffer = new HintType<bool>(NativeGlfw.GLFW_SCALE_FRAMEBUFFER);
+
+    /// <summary>
+    /// Specifies the desired initial window X position. Can be any integer value or <see cref="Glfw.AnyPosition" />.
+    /// </summary>
+    public static readonly HintType<uint> PositionX = new HintType<uint>(NativeGlfw.GLFW_POSITION_X);
+
+    /// <summary>
+    /// Specifies the desired initial window Y position. Can be any integer value or <see cref="Glfw.AnyPosition" />.
+    /// </summary>
+    public static readonly HintType<uint> PositionY = new HintType<uint>(NativeGlfw.GLFW_POSITION_Y);
+
+    /// <summary>
+    /// specifies whether the window is transparent to mouse input, letting any mouse events pass through to whatever window is behind it. This can be set before creation with the GLFW_MOUSE_PASSTHROUGH window hint or after with glfwSetWindowAttrib. This is only supported for undecorated windows. Decorated windows with this enabled will behave differently between platforms.
+    /// </summary>
+    public static readonly HintType<bool> MousePassthrough = new HintType<bool>(NativeGlfw.GLFW_MOUSE_PASSTHROUGH);
 }
 
 /// <summary>
