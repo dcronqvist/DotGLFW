@@ -4,8 +4,7 @@ SHELL := pwsh.exe
 endif
 
 # SOURCE FILES
-SOURCES := $(wildcard DotGLFW/GLFW/*.cs)
-SOURCES +=  DotGLFW/DotGLFW.csproj
+
 
 # DOTGLFW VERSION
 DOTGLFW_VERSION := 1.1.0
@@ -44,6 +43,7 @@ endef
 .PHONY: clean
 clean:
 	@echo "Cleaning DotGLFW"
+	@${call rmrf,./.glfw} 
 	@${call rmrf,./publish} 
 	@${call rmrf,./nupkg} 
 	@${call rmrf,./bin} 
@@ -55,6 +55,8 @@ clean:
 	@${call rmrf,./DotGLFW.LocalExample/obj} 
 	@${call rmrf,./DotGLFW.NugetExample/bin} 
 	@${call rmrf,./DotGLFW.NugetExample/obj} 
+	@${call rmrf,./DotGLFW.Generator/bin} 
+	@${call rmrf,./DotGLFW.Generator/obj} 
 
 .PHONY: run-local
 run-local: $(NUPKGFILE)
@@ -76,11 +78,33 @@ debug-nuget: $(NUPKGFILE)
 	@echo "$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
 	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
 
+.PHONY: run-generator
+run-generator: $(GLFW_REPO_DIR)
+	dotnet run --project DotGLFW.Generator/DotGLFW.Generator.csproj
+
+.PHONY: debug-generator
+GENERATOR_DEBUG_DLL := DotGLFW.Generator/bin/Debug/net8.0/DotGLFW.Generator.dll
+debug-generator:
+	dotnet build DotGLFW.Generator/DotGLFW.Generator.csproj -c Debug
+	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(GENERATOR_DEBUG_DLL) . '[]')"
+
 .PHONY: pack
 pack: $(NUPKGFILE)
 
+GENERATOR_SOURCES := $(wildcard DotGLFW.Generator/*.cs) $(wildcard DotGLFW.Generator/Generation/*.cs) $(wildcard DotGLFW.Generator/Model/*.cs) $(wildcard DotGLFW.Generator/Parsing/*.cs) DotGLFW.Generator/DotGLFW.Generator.csproj
+DotGLFW/Generated: .glfw/glfw-$(GLFW_VERSION) $(GENERATOR_SOURCES)
+	dotnet run --project DotGLFW.Generator/DotGLFW.Generator.csproj -- .glfw/glfw-$(GLFW_VERSION) DotGLFW/Generated LICENSE "https://www.glfw.org/docs/3.4/"
+
+.glfw/glfw-%:
+	@echo "Downloading GLFW $* from https://github.com/glfw/glfw/releases/download/$*/glfw-$*.zip"
+	@New-Item -ItemType Directory -Force -Path ".glfw" | Out-Null
+	@Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$*/glfw-$*.zip" -OutFile ".glfw/glfw-$*.zip"
+	@Expand-Archive -Path ".glfw/glfw-$*.zip" -DestinationPath ".glfw"
+	@Remove-Item -Recurse -Force -Path ".glfw/glfw-$*.zip"
+
 # NuGet package
-$(NUPKGFILE): $(SOURCES) $(RUNTIMEFOLDER_WINX64)/glfw3.dll $(RUNTIMEFOLDER_WINX86)/glfw3.dll $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib
+DOTGLFW_SOURCES := DotGLFW/Generated $(wildcard DotGLFW/Generated/*.cs) $(wildcard DotGLFW/GLFW/*.cs) DotGLFW/DotGLFW.csproj
+$(NUPKGFILE): $(DOTGLFW_SOURCES) $(RUNTIMEFOLDER_WINX64)/glfw3.dll $(RUNTIMEFOLDER_WINX86)/glfw3.dll $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib
 	@echo "Packing DotGLFW $(DOTGLFW_VERSION) into nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg"
 	dotnet pack -c Release DotGLFW -o ./nupkg -p:PackageVersion=$(DOTGLFW_VERSION) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 	@dotnet nuget locals all --clear

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW.NugetExample", "Dot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW.LocalExample", "DotGLFW.LocalExample\DotGLFW.LocalExample.csproj", "{22965227-34F4-4E86-A6F8-8460896C57D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotGLFW.Generator", "DotGLFW.Generator\DotGLFW.Generator.csproj", "{2BB24B7E-5F24-4FEA-849D-9F6B5C68D1F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{22965227-34F4-4E86-A6F8-8460896C57D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22965227-34F4-4E86-A6F8-8460896C57D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22965227-34F4-4E86-A6F8-8460896C57D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB24B7E-5F24-4FEA-849D-9F6B5C68D1F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB24B7E-5F24-4FEA-849D-9F6B5C68D1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB24B7E-5F24-4FEA-849D-9F6B5C68D1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB24B7E-5F24-4FEA-849D-9F6B5C68D1F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
