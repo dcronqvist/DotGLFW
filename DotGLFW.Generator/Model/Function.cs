@@ -9,7 +9,7 @@ public class Function
   public HtmlNode Documentation { get; set; }
   public string SimpleDocumentation { get; set; }
   public CppType ReturnType { get; set; }
-  public List<(string Name, CppType Type)> Parameters { get; set; } = [];
+  public List<FunctionParameter> Parameters { get; set; } = [];
 }
 
 public class FunctionParameter

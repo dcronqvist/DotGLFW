@@ -40,7 +40,11 @@ public class FunctionParser : BaseParser<Function>
     {
       ReturnType = returnType,
       Name = name,
-      Parameters = parameters
+      Parameters = parameters.Select(p => new FunctionParameter
+      {
+        Name = p.Name,
+        Type = p.Type
+      }).ToList()
     };
   }
 }

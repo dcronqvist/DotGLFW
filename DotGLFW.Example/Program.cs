@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace DotGLFW.Example;
 
 public class Program
 {
   private const int GL_COLOR_BUFFER_BIT = 0x00004000;
+
   private delegate void glClearColorHandler(float r, float g, float b, float a);
   private delegate void glClearHandler(int mask);
   private static glClearColorHandler glClearColor;
@@ -56,6 +56,13 @@ public class Program
       Glfw.GetProcAddress("glClear"));
 
     Glfw.SetWindowIcon(window, [CreateIcon()]);
+
+    Glfw.SetKeyCallback(window, (window, key, scancode, action, mods) =>
+    {
+      Console.WriteLine($"Key: {key}, Scancode: {scancode}, Action: {action}, Mods: {mods}");
+    });
+
+    GC.Collect();
 
     while (!Glfw.WindowShouldClose(window))
     {

@@ -1,10 +1,64 @@
+# Platform-specific variables
+# RANDOM_FILE
+# rmrf <path>
+# mkdir <path>
+# fetch <url> <output-file>
+# xzip <zip-file> <destination-dir>
+# cp <source> <destination>
+# gen_debug_args <dll> <cwd> <args>s
+
 ifeq ($(OS),Windows_NT)
-SHELL := pwsh.exe
-.SHELLFLAGS := -NoProfile -Command
+	SHELL := pwsh.exe
+	.SHELLFLAGS := -NoProfile -Command
+
+	RANDOM_FILE := $(shell pwsh -c "Write-Host $$(New-TemporaryFile)")
+define rmrf
+	if (Test-Path $(1)) { Remove-Item -Recurse -Force -Path $(1) }
+endef
+define mkdir
+	New-Item -ItemType Directory -Force -Path $(1) | Out-Null
+endef
+define fetch
+	Invoke-WebRequest -Uri $(1) -OutFile $(2)
+endef
+define xzip
+	Expand-Archive -Path $(1) -DestinationPath $(2)
+endef
+define cp
+	Copy-Item -Path $(1) -Destination $(2)
+endef
+define gen_debug_args
+	$(shell pwsh .scripts/gen_debug_args.ps1 $(1) $(2) $(3))
+endef
+
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Darwin)
+		SHELL := pwsh
+		.SHELLFLAGS := -NoProfile -Command
+
+		RANDOM_FILE := $(shell pwsh -c "Write-Host $$(New-TemporaryFile)")
+		GREP := grep
+define rmrf
+	if (Test-Path $(1)) { Remove-Item -Recurse -Force -Path $(1) }
+endef
+define mkdir
+	New-Item -ItemType Directory -Force -Path $(1) | Out-Null
+endef
+define fetch
+	Invoke-WebRequest -Uri $(1) -OutFile $(2)
+endef
+define xzip
+	Expand-Archive -Path $(1) -DestinationPath $(2)
+endef
+define cp
+	Copy-Item -Path $(1) -Destination $(2)
+endef
+
+    else
+        # TODO: Linux support for makefile
+    endif
 endif
-
-# SOURCE FILES
-
 
 # DOTGLFW VERSION
 DOTGLFW_VERSION := 1.1.0
@@ -14,29 +68,22 @@ GLFW_VERSION := 3.4
 
 # BUILD STUFF
 TMP_DIR := .tmp
-RANDOM_FILE := $(shell pwsh -c "Write-Host $$(New-TemporaryFile)")
 RUNTIMEFOLDER_WINX64 := DotGLFW/runtimes/win-x64/native
 RUNTIMEFOLDER_WINX86 := DotGLFW/runtimes/win-x86/native
 RUNTIMEFOLDER_OSXX64 := DotGLFW/runtimes/osx-x64/native
 RUNTIMEFOLDER_OSXARM64 := DotGLFW/runtimes/osx-arm64/native
 NUPKGFILE := nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg
 
-# FUNCTIONS
-# call rmrf,<path>
-define rmrf
-	if (Test-Path $(1)) { Remove-Item -Recurse -Force -Path $(1) }
-endef
-
 # call download_zip_and_extract_file,<url>,<path-inside-zip-to-file>,<destination-dir>,<output-file-name>
 define download_zip_and_extract_file
 	@echo "Downloading $(1)"
-	@New-Item -ItemType Directory -Force -Path "$(3)" | Out-Null
-	@if(Test-Path "$(3)/$(4)") { Remove-Item -Recurse -Force -Path "$(3)/$(4)" }
-	@Invoke-WebRequest -Uri "$(1)" -OutFile "$(RANDOM_FILE)"
-	@Expand-Archive -Path "$(RANDOM_FILE)" -DestinationPath "$(TMP_DIR)"
-	@Copy-Item -Path "$(TMP_DIR)/$(2)" -Destination "$(3)/$(4)"
-	@Remove-Item -Recurse -Force -Path "$(RANDOM_FILE)"
-	@Remove-Item -Recurse -Force -Path "$(TMP_DIR)"
+	@${call mkdir,"$(3)"}
+	@${call rmrf,"$(3)/$(4)"}
+	@${call fetch,"$(1)","$(RANDOM_FILE)"}
+	@${call xzip,"$(RANDOM_FILE)","$(TMP_DIR)"}
+	@${call cp,"$(TMP_DIR)/$(2)","$(3)/$(4)"}
+	@${call rmrf,"$(RANDOM_FILE)"}
+	@${call rmrf,"$(TMP_DIR)"}
 	@echo "Downloaded $(3)/$(4)"
 endef
 
@@ -60,16 +107,16 @@ clean:
 
 .PHONY: run-local
 run-local: $(NUPKGFILE)
-	dotnet run --project DotGLFW.LocalExample/DotGLFW.LocalExample.csproj --runtime win-x64
+	dotnet run --project DotGLFW.LocalExample/DotGLFW.LocalExample.csproj
 
 .PHONY: run-nuget
 run-nuget: $(NUPKGFILE)
 	dotnet run --project DotGLFW.NugetExample/DotGLFW.NugetExample.csproj
 
 .PHONY: debug-local
-LOCAL_EXAMPLE_DLL := DotGLFW.LocalExample/bin/Debug/net8.0/win-x64/DotGLFW.LocalExample.dll
+LOCAL_EXAMPLE_DLL := DotGLFW.LocalExample/bin/Debug/net8.0/DotGLFW.LocalExample.dll
 debug-local: $(NUPKGFILE)
-	dotnet build DotGLFW.LocalExample/DotGLFW.LocalExample.csproj -c Debug --runtime win-x64
+	dotnet build DotGLFW.LocalExample/DotGLFW.LocalExample.csproj -c Debug
 	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(LOCAL_EXAMPLE_DLL) . '[]')"
 
 .PHONY: debug-nuget
@@ -79,12 +126,11 @@ debug-nuget: $(NUPKGFILE)
 	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
 
 .PHONY: run-generator
-run-generator: $(GLFW_REPO_DIR)
-	dotnet run --project DotGLFW.Generator/DotGLFW.Generator.csproj
+run-generator: DotGLFW/Generated
 
 .PHONY: debug-generator
 GENERATOR_DEBUG_DLL := DotGLFW.Generator/bin/Debug/net8.0/DotGLFW.Generator.dll
-debug-generator:
+debug-generator: 
 	dotnet build DotGLFW.Generator/DotGLFW.Generator.csproj -c Debug
 	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(GENERATOR_DEBUG_DLL) . '[]')"
 
@@ -97,10 +143,10 @@ DotGLFW/Generated: .glfw/glfw-$(GLFW_VERSION) $(GENERATOR_SOURCES)
 
 .glfw/glfw-%:
 	@echo "Downloading GLFW $* from https://github.com/glfw/glfw/releases/download/$*/glfw-$*.zip"
-	@New-Item -ItemType Directory -Force -Path ".glfw" | Out-Null
-	@Invoke-WebRequest -Uri "https://github.com/glfw/glfw/releases/download/$*/glfw-$*.zip" -OutFile ".glfw/glfw-$*.zip"
-	@Expand-Archive -Path ".glfw/glfw-$*.zip" -DestinationPath ".glfw"
-	@Remove-Item -Recurse -Force -Path ".glfw/glfw-$*.zip"
+	@${call mkdir,".glfw"}
+	@${call fetch,"https://github.com/glfw/glfw/releases/download/$*/glfw-$*.zip",".glfw/glfw-$*.zip"}
+	@${call xzip,".glfw/glfw-$*.zip",".glfw"}
+	@${call rmrf,".glfw/glfw-$*.zip"}
 
 # NuGet package
 DOTGLFW_SOURCES := DotGLFW/Generated $(wildcard DotGLFW/Generated/*.cs) $(wildcard DotGLFW/GLFW/*.cs) DotGLFW/DotGLFW.csproj
