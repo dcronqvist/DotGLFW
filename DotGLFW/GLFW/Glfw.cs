@@ -78,6 +78,20 @@ public static class Glfw
     return result;
   }
 
+  private static string CopyStringFromUnmanaged(nint ptr, Encoding encoding)
+  {
+    if (ptr == IntPtr.Zero)
+      return string.Empty;
+
+    int length = 0;
+    while (Marshal.ReadByte(ptr, length) != 0)
+      length++;
+
+    byte[] buffer = new byte[length];
+    Marshal.Copy(ptr, buffer, 0, length);
+    return encoding.GetString(buffer);
+  }
+
   /// <inheritdoc cref="glfwInit"/>
   public static bool Init() => glfwInit() == GLFW_TRUE;
 
@@ -133,14 +147,14 @@ public static class Glfw
 
   // The native function returns a statically allocated string, so we just do a copy here.
   /// <inheritdoc cref="glfwGetVersionString"/>
-  public static string GetVersionString() => Marshal.PtrToStringUTF8(glfwGetVersionString());
+  public static string GetVersionString() => CopyStringFromUnmanaged(glfwGetVersionString(), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwGetError"/>
   public static ErrorCode GetError(out string description)
   {
     nint descriptionPtr = IntPtr.Zero;
     int error = glfwGetError(descriptionPtr);
-    description = Marshal.PtrToStringUTF8(descriptionPtr);
+    description = CopyStringFromUnmanaged(descriptionPtr, Encoding.UTF8);
     return (ErrorCode)error;
   }
 
@@ -152,7 +166,7 @@ public static class Glfw
       ref _errorCallback,
       ref _currentGLFWerrorfun,
       callback,
-      (int errorCode, IntPtr description) => _errorCallback?.Invoke((ErrorCode)errorCode, Marshal.PtrToStringUTF8(description)),
+      (int errorCode, IntPtr description) => _errorCallback?.Invoke((ErrorCode)errorCode, CopyStringFromUnmanaged(description, Encoding.UTF8)),
       native => glfwSetErrorCallback(native)
     );
   }
@@ -222,7 +236,7 @@ public static class Glfw
   // Name string pointer is allocated by GLFW and should not be freed by the caller.
   // We only copy the string here.
   /// <inheritdoc cref="glfwGetMonitorName"/>
-  public unsafe static string GetMonitorName(Monitor monitor) => Marshal.PtrToStringUTF8(glfwGetMonitorName(monitor));
+  public unsafe static string GetMonitorName(Monitor monitor) => CopyStringFromUnmanaged(glfwGetMonitorName(monitor), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwSetMonitorUserPointer"/>
   public unsafe static void SetMonitorUserPointer(Monitor monitor, IntPtr pointer)
@@ -371,7 +385,7 @@ public static class Glfw
   public unsafe static void SetWindowShouldClose(Window window, bool value) => glfwSetWindowShouldClose(window, value ? GLFW_TRUE : GLFW_FALSE);
 
   /// <inheritdoc cref="glfwGetWindowTitle"/>
-  public unsafe static string GetWindowTitle(Window window) => Marshal.PtrToStringUTF8(glfwGetWindowTitle(window));
+  public unsafe static string GetWindowTitle(Window window) => CopyStringFromUnmanaged(glfwGetWindowTitle(window), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwSetWindowTitle"/>
   public unsafe static void SetWindowTitle(Window window, string title) =>
@@ -651,7 +665,8 @@ public static class Glfw
   public static bool RawMouseMotionSupported() => glfwRawMouseMotionSupported() == GLFW_TRUE;
 
   /// <inheritdoc cref="glfwGetKeyName"/>
-  public unsafe static string GetKeyName(Key key, int scancode) => Marshal.PtrToStringUTF8(glfwGetKeyName((int)key, scancode));
+  public unsafe static string GetKeyName(Key key, int scancode) =>
+    CopyStringFromUnmanaged(glfwGetKeyName((int)key, scancode), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwGetKeyScancode"/>
   public unsafe static int GetKeyScancode(Key key) => glfwGetKeyScancode((int)key);
@@ -838,7 +853,7 @@ public static class Glfw
         for (int i = 0; i < count; i++)
         {
           var ptr = Marshal.ReadIntPtr(paths, i * IntPtr.Size);
-          managedPaths[i] = Marshal.PtrToStringUTF8(ptr);
+          managedPaths[i] = CopyStringFromUnmanaged(ptr, Encoding.UTF8);
         }
         _dropCallback?.Invoke(managedWindow, managedPaths);
       },
@@ -873,10 +888,12 @@ public static class Glfw
   }
 
   /// <inheritdoc cref="glfwGetJoystickName"/>
-  public unsafe static string GetJoystickName(Joystick jid) => Marshal.PtrToStringUTF8(glfwGetJoystickName((int)jid));
+  public unsafe static string GetJoystickName(Joystick jid) =>
+    CopyStringFromUnmanaged(glfwGetJoystickName((int)jid), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwGetJoystickGUID"/>
-  public unsafe static string GetJoystickGUID(Joystick jid) => Marshal.PtrToStringUTF8(glfwGetJoystickGUID((int)jid));
+  public unsafe static string GetJoystickGUID(Joystick jid) =>
+    CopyStringFromUnmanaged(glfwGetJoystickGUID((int)jid), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwSetJoystickUserPointer"/>
   public unsafe static void SetJoystickUserPointer(Joystick jid, IntPtr pointer) =>
@@ -912,7 +929,7 @@ public static class Glfw
 
   /// <inheritdoc cref="glfwGetGamepadName"/>
   public unsafe static string GetGamepadName(Joystick jid) =>
-    Marshal.PtrToStringUTF8(glfwGetGamepadName((int)jid));
+    CopyStringFromUnmanaged(glfwGetGamepadName((int)jid), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwGetGamepadState"/>
   public unsafe static bool GetGamepadState(Joystick jid, out Gamepadstate state)
@@ -933,7 +950,7 @@ public static class Glfw
 
   /// <inheritdoc cref="glfwGetClipboardString"/>
   public unsafe static string GetClipboardString(Window window) =>
-    Marshal.PtrToStringUTF8(glfwGetClipboardString(window));
+    CopyStringFromUnmanaged(glfwGetClipboardString(window), Encoding.UTF8);
 
   /// <inheritdoc cref="glfwGetTime"/>
   public static double GetTime() => glfwGetTime();
@@ -983,7 +1000,7 @@ public static class Glfw
     for (int i = 0; i < count; i++)
     {
       var ptr = Marshal.ReadIntPtr(extensions, i * IntPtr.Size);
-      managedStrings[i] = Marshal.PtrToStringUTF8(ptr);
+      managedStrings[i] = CopyStringFromUnmanaged(ptr, Encoding.UTF8);
     }
     return managedStrings;
   }
@@ -998,6 +1015,6 @@ public static class Glfw
     glfwGetPhysicalDevicePresentationSupport(instance, device, queuefamily) == GLFW_TRUE;
 
   /// <inheritdoc cref="glfwCreateWindowSurface"/>
-  public unsafe static IntPtr CreateWindowSurface(IntPtr instance, Window window, IntPtr allocator, IntPtr surface) =>
+  public unsafe static int CreateWindowSurface(IntPtr instance, Window window, IntPtr allocator, IntPtr surface) =>
     glfwCreateWindowSurface(instance, window, allocator, surface);
 }

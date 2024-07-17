@@ -97,6 +97,7 @@ clean:
 	@${call rmrf,./obj} 
 	@${call rmrf,./DotGLFW/bin} 
 	@${call rmrf,./DotGLFW/obj} 
+	@${call rmrf,./DotGLFW/Generated} 
 	@${call rmrf,./DotGLFW/runtimes} 
 	@${call rmrf,./DotGLFW.LocalExample/bin} 
 	@${call rmrf,./DotGLFW.LocalExample/obj} 

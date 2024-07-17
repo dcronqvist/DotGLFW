@@ -123,7 +123,7 @@ public partial class Generator
       var capitalizedField = normalFieldName.Capitalize();
 
       content.AppendLine($"  /// <inheritdoc cref=\"NativeGlfw.{name}.{field.Name}\"/>");
-      content.AppendLine($"  public {ConvertToCSharpType(field.Type, api, preferArrayOverPointer: true)} {capitalizedField} {{ get; init; }}");
+      content.AppendLine($"  public {ConvertToCSharpType(field.Type, api, preferArrayOverPointer: true)} {capitalizedField} {{ get; set; }}");
     }
     content.AppendLine("}");
 
