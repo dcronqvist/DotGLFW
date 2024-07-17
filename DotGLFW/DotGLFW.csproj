@@ -1,20 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AssemblyName>DotGLFW</AssemblyName>
     <RootNamespace>DotGLFW</RootNamespace>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>preview</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedSources</CompilerGeneratedFilesOutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>DotGLFW</PackageId>
     <Authors>dcronqvist</Authors>
     <Title>DotGLFW</Title>
-    <Description>DotGLFW is a C# wrapper for GLFW, a multi-platform library with included GLFW binaries for creating windows with OpenGL contexts and managing input and events.</Description>
+    <Description>DotGLFW is a C# binding to GLFW, a multi-platform library for creating windows, graphics contexts, managing input and events. Ships with pre-compiled binaries for Windows and MacOS.</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/dcronqvist/DotGLFW</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -27,6 +30,7 @@
 
   <ItemGroup>
     <Compile Include="GLFW/**/*.cs" />
+    <Compile Include="Generated/**/*.cs" />
   </ItemGroup>
 
   <ItemGroup>

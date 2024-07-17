@@ -1,86 +1,168 @@
+# Platform-specific variables
+# RANDOM_FILE
+# GREP
+# OPEN
+# rmrf <path>
+# mkdir <path>
+# fetch <url> <output-file>
+# xzip <zip-file> <destination-dir>
+# cp <source> <destination>
+# gen_debug_args <dll> <cwd> <args>s
+# open <url>
+
 ifeq ($(OS),Windows_NT)
-SHELL := pwsh.exe
-.SHELLFLAGS := -NoProfile -Command
+	SHELL := pwsh.exe
+	.SHELLFLAGS := -NoProfile -Command
+
+	RANDOM_FILE := $(shell pwsh -c "Write-Host $$(New-TemporaryFile)")
+	GREP := findstr
+	OPEN := Start-Process 
+define rmrf
+	if (Test-Path $(1)) { Remove-Item -Recurse -Force -Path $(1) }
+endef
+define mkdir
+	New-Item -ItemType Directory -Force -Path $(1) | Out-Null
+endef
+define fetch
+	Invoke-WebRequest -Uri $(1) -OutFile $(2)
+endef
+define xzip
+	Expand-Archive -Path $(1) -DestinationPath $(2)
+endef
+define cp
+	Copy-Item -Path $(1) -Destination $(2)
+endef
+define gen_debug_args
+	$(shell pwsh .scripts/gen_debug_args.ps1 $(1) $(2) $(3))
+endef
+
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Darwin)
+		RANDOM_FILE := $(shell mktemp)
+		GREP := grep
+		OPEN := open
+define rmrf
+	if [ -e $(1) ]; then rm -rf $(1); fi
+endef
+define mkdir
+	mkdir -p $(1)
+endef
+define fetch
+	curl -L -o $(2) $(1)
+endef
+define xzip
+	unzip -qq -o $(1) -d $(2)
+endef
+define cp
+	cp $(1) $(2)
+endef
+define gen_debug_args
+	$(shell .scripts/gen_debug_args.sh $(1) $(2) $(3))
+endef
+
+    else
+        # TODO: Linux support for makefile
+    endif
 endif
 
-# SOURCE FILES
-SOURCES := $(wildcard DotGLFW/GLFW/*.cs)
-SOURCES +=  DotGLFW/DotGLFW.csproj
-
 # DOTGLFW VERSION
-DOTGLFW_VERSION := 1.1.0
+DOTGLFW_VERSION := 1.2.0
 
 # VERSION OF GLFW TO DOWNLOAD
 GLFW_VERSION := 3.4
 
 # BUILD STUFF
 TMP_DIR := .tmp
-RANDOM_FILE := $(shell pwsh -c "Write-Host $$(New-TemporaryFile)")
 RUNTIMEFOLDER_WINX64 := DotGLFW/runtimes/win-x64/native
 RUNTIMEFOLDER_WINX86 := DotGLFW/runtimes/win-x86/native
 RUNTIMEFOLDER_OSXX64 := DotGLFW/runtimes/osx-x64/native
 RUNTIMEFOLDER_OSXARM64 := DotGLFW/runtimes/osx-arm64/native
 NUPKGFILE := nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg
 
-# FUNCTIONS
-# call rmrf,<path>
-define rmrf
-	if (Test-Path $(1)) { Remove-Item -Recurse -Force -Path $(1) }
-endef
-
 # call download_zip_and_extract_file,<url>,<path-inside-zip-to-file>,<destination-dir>,<output-file-name>
 define download_zip_and_extract_file
 	@echo "Downloading $(1)"
-	@New-Item -ItemType Directory -Force -Path "$(3)" | Out-Null
-	@if(Test-Path "$(3)/$(4)") { Remove-Item -Recurse -Force -Path "$(3)/$(4)" }
-	@Invoke-WebRequest -Uri "$(1)" -OutFile "$(RANDOM_FILE)"
-	@Expand-Archive -Path "$(RANDOM_FILE)" -DestinationPath "$(TMP_DIR)"
-	@Copy-Item -Path "$(TMP_DIR)/$(2)" -Destination "$(3)/$(4)"
-	@Remove-Item -Recurse -Force -Path "$(RANDOM_FILE)"
-	@Remove-Item -Recurse -Force -Path "$(TMP_DIR)"
+	@${call mkdir,"$(3)"}
+	@${call rmrf,"$(3)/$(4)"}
+	@${call fetch,"$(1)","$(RANDOM_FILE)"}
+	@${call xzip,"$(RANDOM_FILE)","$(TMP_DIR)"}
+	@${call cp,"$(TMP_DIR)/$(2)","$(3)/$(4)"}
+	@${call rmrf,"$(RANDOM_FILE)"}
+	@${call rmrf,"$(TMP_DIR)"}
 	@echo "Downloaded $(3)/$(4)"
 endef
 
 .PHONY: clean
 clean:
 	@echo "Cleaning DotGLFW"
+	@${call rmrf,./.glfw} 
 	@${call rmrf,./publish} 
 	@${call rmrf,./nupkg} 
 	@${call rmrf,./bin} 
 	@${call rmrf,./obj} 
 	@${call rmrf,./DotGLFW/bin} 
 	@${call rmrf,./DotGLFW/obj} 
+	@${call rmrf,./DotGLFW/Generated} 
 	@${call rmrf,./DotGLFW/runtimes} 
 	@${call rmrf,./DotGLFW.LocalExample/bin} 
 	@${call rmrf,./DotGLFW.LocalExample/obj} 
 	@${call rmrf,./DotGLFW.NugetExample/bin} 
 	@${call rmrf,./DotGLFW.NugetExample/obj} 
+	@${call rmrf,./DotGLFW.NugetAotExample/bin} 
+	@${call rmrf,./DotGLFW.NugetAotExample/obj} 
+	@${call rmrf,./DotGLFW.Generator/bin} 
+	@${call rmrf,./DotGLFW.Generator/obj} 
+
+.PHONY: publish-aot
+publish-aot: $(NUPKGFILE)
+	dotnet publish DotGLFW.NugetAotExample/DotGLFW.NugetAotExample.csproj -c Release -p:PublishTrimmed=true -p:PublishReadyToRun=true
 
 .PHONY: run-local
 run-local: $(NUPKGFILE)
-	dotnet run --project DotGLFW.LocalExample/DotGLFW.LocalExample.csproj --runtime win-x64
+	dotnet run --project DotGLFW.LocalExample/DotGLFW.LocalExample.csproj
 
 .PHONY: run-nuget
 run-nuget: $(NUPKGFILE)
 	dotnet run --project DotGLFW.NugetExample/DotGLFW.NugetExample.csproj
 
 .PHONY: debug-local
-LOCAL_EXAMPLE_DLL := DotGLFW.LocalExample/bin/Debug/net8.0/win-x64/DotGLFW.LocalExample.dll
+LOCAL_EXAMPLE_DLL := DotGLFW.LocalExample/bin/Debug/net8.0/DotGLFW.LocalExample.dll
 debug-local: $(NUPKGFILE)
-	dotnet build DotGLFW.LocalExample/DotGLFW.LocalExample.csproj -c Debug --runtime win-x64
-	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(LOCAL_EXAMPLE_DLL) . '[]')"
+	dotnet build DotGLFW.LocalExample/DotGLFW.LocalExample.csproj -c Debug
+	@$(OPEN) "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(call gen_debug_args,$(LOCAL_EXAMPLE_DLL),.,'[]')"
 
 .PHONY: debug-nuget
 debug-nuget: $(NUPKGFILE)
 	dotnet build DotGLFW.Example/DotGLFW.Example.csproj -c Debug
-	@echo "$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
-	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
+	@$(OPEN) "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(call gen_debug_args,$(EXAMPLE_DLL),.,'[]')"
+
+.PHONY: run-generator
+run-generator: DotGLFW/Generated
+
+.PHONY: debug-generator
+GENERATOR_DEBUG_DLL := DotGLFW.Generator/bin/Debug/net8.0/DotGLFW.Generator.dll
+debug-generator: 
+	dotnet build DotGLFW.Generator/DotGLFW.Generator.csproj -c Debug
+	@$(OPEN) "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(call gen_debug_args,$(GENERATOR_DEBUG_DLL),.,'[]')"
 
 .PHONY: pack
 pack: $(NUPKGFILE)
 
+GENERATOR_SOURCES := $(wildcard DotGLFW.Generator/*.cs) $(wildcard DotGLFW.Generator/Generation/*.cs) $(wildcard DotGLFW.Generator/Model/*.cs) $(wildcard DotGLFW.Generator/Parsing/*.cs) DotGLFW.Generator/DotGLFW.Generator.csproj
+DotGLFW/Generated: .glfw/glfw-$(GLFW_VERSION) $(GENERATOR_SOURCES)
+	dotnet run --project DotGLFW.Generator/DotGLFW.Generator.csproj -- .glfw/glfw-$(GLFW_VERSION) DotGLFW/Generated LICENSE "https://www.glfw.org/docs/3.4/"
+
+.glfw/glfw-%:
+	@echo "Downloading GLFW $* from https://github.com/glfw/glfw/releases/download/$*/glfw-$*.zip"
+	@${call mkdir,".glfw"}
+	@${call fetch,"https://github.com/glfw/glfw/releases/download/$*/glfw-$*.zip",".glfw/glfw-$*.zip"}
+	@${call xzip,".glfw/glfw-$*.zip",".glfw"}
+	@${call rmrf,".glfw/glfw-$*.zip"}
+
 # NuGet package
-$(NUPKGFILE): $(SOURCES) $(RUNTIMEFOLDER_WINX64)/glfw3.dll $(RUNTIMEFOLDER_WINX86)/glfw3.dll $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib
+DOTGLFW_SOURCES := DotGLFW/Generated $(wildcard DotGLFW/Generated/*.cs) $(wildcard DotGLFW/GLFW/*.cs) DotGLFW/DotGLFW.csproj
+$(NUPKGFILE): $(RUNTIMEFOLDER_WINX64)/glfw3.dll $(RUNTIMEFOLDER_WINX86)/glfw3.dll $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib $(DOTGLFW_SOURCES)
 	@echo "Packing DotGLFW $(DOTGLFW_VERSION) into nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg"
 	dotnet pack -c Release DotGLFW -o ./nupkg -p:PackageVersion=$(DOTGLFW_VERSION) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 	@dotnet nuget locals all --clear

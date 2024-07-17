@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\DotGLFW.Example/Program.cs" />
+    <Compile Include="..\DotGLFW.Example\Program.cs" />
   </ItemGroup>
 
   <PropertyGroup Condition="$(Configuration) == 'Debug'">
@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotGLFW" Version="1.0.3" />
+    <PackageReference Include="DotGLFW" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

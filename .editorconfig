@@ -1,0 +1,7 @@
+# Top-most EditorConfig file
+root = true
+
+# C# files
+[*.cs]
+indent_style = space
+indent_size = 2
