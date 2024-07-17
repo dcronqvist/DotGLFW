@@ -1017,4 +1017,16 @@ public static class Glfw
   /// <inheritdoc cref="glfwCreateWindowSurface"/>
   public unsafe static int CreateWindowSurface(IntPtr instance, Window window, IntPtr allocator, IntPtr surface) =>
     glfwCreateWindowSurface(instance, window, allocator, surface);
+
+  /// <inheritdoc cref="glfwGetWin32Window"/>
+  public unsafe static IntPtr GetWin32Window(Window window) => glfwGetWin32Window(window);
+
+  /// <inheritdoc cref="glfwGetCocoaWindow"/>
+  public unsafe static IntPtr GetCocoaWindow(Window window) => glfwGetCocoaWindow(window);
+
+  /// <inheritdoc cref="glfwGetX11Window"/>
+  public unsafe static IntPtr GetX11Window(Window window) => glfwGetX11Window(window);
+
+  /// <inheritdoc cref="glfwGetWaylandWindow"/>
+  public unsafe static IntPtr GetWaylandWindow(Window window) => glfwGetWaylandWindow(window);
 }
