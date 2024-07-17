@@ -109,8 +109,14 @@ clean:
 	@${call rmrf,./DotGLFW.LocalExample/obj} 
 	@${call rmrf,./DotGLFW.NugetExample/bin} 
 	@${call rmrf,./DotGLFW.NugetExample/obj} 
+	@${call rmrf,./DotGLFW.NugetAotExample/bin} 
+	@${call rmrf,./DotGLFW.NugetAotExample/obj} 
 	@${call rmrf,./DotGLFW.Generator/bin} 
 	@${call rmrf,./DotGLFW.Generator/obj} 
+
+.PHONY: publish-aot
+publish-aot: $(NUPKGFILE)
+	dotnet publish DotGLFW.NugetAotExample/DotGLFW.NugetAotExample.csproj -c Release -p:PublishTrimmed=true -p:PublishReadyToRun=true
 
 .PHONY: run-local
 run-local: $(NUPKGFILE)
