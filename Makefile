@@ -1,17 +1,22 @@
 # Platform-specific variables
 # RANDOM_FILE
+# GREP
+# OPEN
 # rmrf <path>
 # mkdir <path>
 # fetch <url> <output-file>
 # xzip <zip-file> <destination-dir>
 # cp <source> <destination>
 # gen_debug_args <dll> <cwd> <args>s
+# open <url>
 
 ifeq ($(OS),Windows_NT)
 	SHELL := pwsh.exe
 	.SHELLFLAGS := -NoProfile -Command
 
 	RANDOM_FILE := $(shell pwsh -c "Write-Host $$(New-TemporaryFile)")
+	GREP := findstr
+	OPEN := Start-Process 
 define rmrf
 	if (Test-Path $(1)) { Remove-Item -Recurse -Force -Path $(1) }
 endef
@@ -34,25 +39,26 @@ endef
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
-		SHELL := pwsh
-		.SHELLFLAGS := -NoProfile -Command
-
-		RANDOM_FILE := $(shell pwsh -c "Write-Host $$(New-TemporaryFile)")
+		RANDOM_FILE := $(shell mktemp)
 		GREP := grep
+		OPEN := open
 define rmrf
-	if (Test-Path $(1)) { Remove-Item -Recurse -Force -Path $(1) }
+	if [ -e $(1) ]; then rm -rf $(1); fi
 endef
 define mkdir
-	New-Item -ItemType Directory -Force -Path $(1) | Out-Null
+	mkdir -p $(1)
 endef
 define fetch
-	Invoke-WebRequest -Uri $(1) -OutFile $(2)
+	curl -L -o $(2) $(1)
 endef
 define xzip
-	Expand-Archive -Path $(1) -DestinationPath $(2)
+	unzip -qq -o $(1) -d $(2)
 endef
 define cp
-	Copy-Item -Path $(1) -Destination $(2)
+	cp $(1) $(2)
+endef
+define gen_debug_args
+	$(shell .scripts/gen_debug_args.sh $(1) $(2) $(3))
 endef
 
     else
@@ -118,13 +124,12 @@ run-nuget: $(NUPKGFILE)
 LOCAL_EXAMPLE_DLL := DotGLFW.LocalExample/bin/Debug/net8.0/DotGLFW.LocalExample.dll
 debug-local: $(NUPKGFILE)
 	dotnet build DotGLFW.LocalExample/DotGLFW.LocalExample.csproj -c Debug
-	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(LOCAL_EXAMPLE_DLL) . '[]')"
+	@$(OPEN) "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(call gen_debug_args,$(LOCAL_EXAMPLE_DLL),.,'[]')"
 
 .PHONY: debug-nuget
 debug-nuget: $(NUPKGFILE)
 	dotnet build DotGLFW.Example/DotGLFW.Example.csproj -c Debug
-	@echo "$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
-	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(EXAMPLE_DLL) . '[]')"
+	@$(OPEN) "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(call gen_debug_args,$(EXAMPLE_DLL),.,'[]')"
 
 .PHONY: run-generator
 run-generator: DotGLFW/Generated
@@ -133,7 +138,7 @@ run-generator: DotGLFW/Generated
 GENERATOR_DEBUG_DLL := DotGLFW.Generator/bin/Debug/net8.0/DotGLFW.Generator.dll
 debug-generator: 
 	dotnet build DotGLFW.Generator/DotGLFW.Generator.csproj -c Debug
-	@Start-Process "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(shell pwsh .scripts/gen_debug_args.ps1 $(GENERATOR_DEBUG_DLL) . '[]')"
+	@$(OPEN) "vscode-insiders://fabiospampinato.vscode-debug-launcher/launch?args=$(call gen_debug_args,$(GENERATOR_DEBUG_DLL),.,'[]')"
 
 .PHONY: pack
 pack: $(NUPKGFILE)
@@ -151,7 +156,7 @@ DotGLFW/Generated: .glfw/glfw-$(GLFW_VERSION) $(GENERATOR_SOURCES)
 
 # NuGet package
 DOTGLFW_SOURCES := DotGLFW/Generated $(wildcard DotGLFW/Generated/*.cs) $(wildcard DotGLFW/GLFW/*.cs) DotGLFW/DotGLFW.csproj
-$(NUPKGFILE): $(DOTGLFW_SOURCES) $(RUNTIMEFOLDER_WINX64)/glfw3.dll $(RUNTIMEFOLDER_WINX86)/glfw3.dll $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib
+$(NUPKGFILE): $(RUNTIMEFOLDER_WINX64)/glfw3.dll $(RUNTIMEFOLDER_WINX86)/glfw3.dll $(RUNTIMEFOLDER_OSXX64)/libglfw3.dylib $(RUNTIMEFOLDER_OSXARM64)/libglfw3.dylib $(DOTGLFW_SOURCES)
 	@echo "Packing DotGLFW $(DOTGLFW_VERSION) into nupkg/DotGLFW.$(DOTGLFW_VERSION).nupkg"
 	dotnet pack -c Release DotGLFW -o ./nupkg -p:PackageVersion=$(DOTGLFW_VERSION) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 	@dotnet nuget locals all --clear

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace DotGLFW.Generator;
@@ -9,11 +10,6 @@ public class SourceWriter : ISourceWriter
   public SourceWriter(string outputDirectory)
   {
     _outputDirectory = outputDirectory;
-
-    if (Directory.Exists(_outputDirectory))
-    {
-      Directory.Delete(_outputDirectory, true);
-    }
   }
 
   public void WriteToFile(string filePath, string content)
@@ -21,14 +17,17 @@ public class SourceWriter : ISourceWriter
     if (!Directory.Exists(_outputDirectory))
     {
       Directory.CreateDirectory(_outputDirectory);
+      Console.WriteLine($"Created directory: {_outputDirectory}");
     }
 
     if (File.Exists(Path.Combine(_outputDirectory, filePath)))
     {
       File.Delete(Path.Combine(_outputDirectory, filePath));
+      Console.WriteLine($"Deleted existing file: {filePath}");
     }
 
-    using var writer = new StreamWriter(Path.Combine(_outputDirectory, filePath));
+    using var writer = new StreamWriter(Path.Combine(_outputDirectory, filePath), false);
     writer.Write(content);
+    Console.WriteLine($"Wrote file: {filePath}");
   }
 }
